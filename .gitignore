@@ -17,6 +17,17 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+.gradle/
+bin/
+build/
+gradle/
+gradlew.exe
+gradlew
+.settings/
+eclipse/
+.project
+.classpath
+
 # =========================
 # Operating System Files
 # =========================

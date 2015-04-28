@@ -1,0 +1,13 @@
+#CreativeTabs
+itemGroup.Forgery=Forgery
+
+#Blocks
+tile.orecopper.name=Copper Ore
+tile.oretin.name=Tin Ore
+
+#Items
+item.flintaxe.name=Flint Axe
+item.flintpickaxe.name=Flint Pickaxe
+item.flintspade.name=Flint Spade
+item.flinthoe.name=Flint Hoe
+item.flintsword.name=Flint Sword
