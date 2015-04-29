@@ -6,15 +6,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IChatComponent;
 
-public class TileEntityFurnace extends TileEntity implements IInventory {
+public abstract class TileEntityForgery extends TileEntity implements IInventory {
 
-	private ItemStack[] inventory = new ItemStack[2];
-
-	@Override
-	public String getName() {
-		return "forgery.furnace";
-	}
-
+	protected ItemStack[] inventory;
+	
 	@Override
 	public boolean hasCustomName() {
 		return false;
@@ -24,7 +19,7 @@ public class TileEntityFurnace extends TileEntity implements IInventory {
 	public IChatComponent getDisplayName() {
 		return null;
 	}
-
+	
 	@Override
 	public int getSizeInventory() {
 		return inventory.length;
@@ -34,7 +29,7 @@ public class TileEntityFurnace extends TileEntity implements IInventory {
 	public ItemStack getStackInSlot(int index) {
 		return this.inventory[index];
 	}
-
+	
 	@Override
 	public ItemStack decrStackSize(int index, int count) {
 		ItemStack stack = getStackInSlot(index);
@@ -67,17 +62,7 @@ public class TileEntityFurnace extends TileEntity implements IInventory {
 			stack.stackSize = this.getInventoryStackLimit();
 		}
 	}
-
-	@Override
-	public int getInventoryStackLimit() {
-		return 64;
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return true;
-	}
-
+	
 	@Override
 	public void openInventory(EntityPlayer player) {
 	}
@@ -85,12 +70,7 @@ public class TileEntityFurnace extends TileEntity implements IInventory {
 	@Override
 	public void closeInventory(EntityPlayer player) {
 	}
-
-	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) {
-		return false;
-	}
-
+	
 	@Override
 	public int getField(int id) {
 		return 0;
@@ -109,5 +89,4 @@ public class TileEntityFurnace extends TileEntity implements IInventory {
 	public void clear() {
 
 	}
-
 }

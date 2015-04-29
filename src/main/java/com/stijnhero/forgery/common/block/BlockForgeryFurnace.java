@@ -11,18 +11,18 @@ import net.minecraft.world.World;
 
 import com.stijnhero.forgery.Forgery;
 import com.stijnhero.forgery.client.gui.Guis;
-import com.stijnhero.forgery.common.tileentity.TileEntityFurnace;
+import com.stijnhero.forgery.common.tileentity.TileEntityForgeryFurnace;
 
-public class BlockFurnace extends BlockContainer {
+public class BlockForgeryFurnace extends BlockContainer {
 
-	public BlockFurnace(Material material) {
+	public BlockForgeryFurnace(Material material) {
 		super(material);
 		this.setCreativeTab(Forgery.Forgery);
 	}
 	
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		return new TileEntityFurnace();
+		return new TileEntityForgeryFurnace();
 	}
 	
 	@Override
@@ -31,7 +31,7 @@ public class BlockFurnace extends BlockContainer {
 		if(tileentity == null || player.isSneaking()){
 			return false;
 		}
-		player.openGui(Forgery.instance, Guis.FURNACE, world, pos.getX(), pos.getY(), pos.getZ());
+		player.openGui(Forgery.instance, Guis.FORGERY_FURNACE, world, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
 

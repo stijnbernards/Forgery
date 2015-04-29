@@ -1,8 +1,8 @@
 package com.stijnhero.forgery.client.gui.container;
 
-import com.stijnhero.forgery.client.gui.GuiFurnace;
+import com.stijnhero.forgery.client.gui.GuiForgeryFurnace;
 import com.stijnhero.forgery.client.gui.Guis;
-import com.stijnhero.forgery.common.tileentity.TileEntityFurnace;
+import com.stijnhero.forgery.common.tileentity.TileEntityForgeryFurnace;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -16,9 +16,9 @@ public class GuiHandler implements IGuiHandler {
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		TileEntity tileentity = world.getTileEntity(new BlockPos(x, y, z));
 		switch(ID){
-			case Guis.FURNACE:
-				if(tileentity instanceof TileEntityFurnace){
-					return new ContainerFurnace((TileEntityFurnace)tileentity, player.inventory);
+			case Guis.FORGERY_FURNACE:
+				if(tileentity instanceof TileEntityForgeryFurnace){
+					return new ContainerForgeryFurnace((TileEntityForgeryFurnace)tileentity, player.inventory);
 				}
 			}
 		return null;
@@ -28,9 +28,9 @@ public class GuiHandler implements IGuiHandler {
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) { 
 		TileEntity tileentity = world.getTileEntity(new BlockPos(x, y, z));
 		switch(ID){
-			case Guis.FURNACE:
-				if(tileentity instanceof TileEntityFurnace){
-					return new GuiFurnace((TileEntityFurnace)tileentity, player.inventory);
+			case Guis.FORGERY_FURNACE:
+				if(tileentity instanceof TileEntityForgeryFurnace){
+					return new GuiForgeryFurnace((TileEntityForgeryFurnace)tileentity, player.inventory);
 				}
 			}
 		return null;
