@@ -1,14 +1,14 @@
 [
 {
-  "modid": "intermergical",
-  "name": "Intermergical",
-  "description": "Intermergical magical research mod",
-  "version": "0.0.1",
-  "mcversion": "1.8.1",
+  "modid": "forgery",
+  "name": "Forgery",
+  "description": "Example placeholder mod.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["Rudonator"],
-  "credits": "Rudonator",
+  "authorList": ["Stijn Bernards"],
+  "credits": "",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
