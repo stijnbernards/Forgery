@@ -3,13 +3,15 @@ package com.stijnhero.forgery.common.tileentity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IChatComponent;
 
-public class TileEntityFurnace extends TileEntity implements IInventory {
+public class TileEntityForgeryFurnace extends TileEntity implements IInventory, IUpdatePlayerListBox {
 
-	private ItemStack[] inventory = new ItemStack[2];
-
+	private ItemStack[] inventory = new ItemStack[8];
+	private TileEntityHeater heater = null;
+	
 	@Override
 	public String getName() {
 		return "forgery.furnace";
@@ -109,5 +111,16 @@ public class TileEntityFurnace extends TileEntity implements IInventory {
 	public void clear() {
 
 	}
+	
+	public void setHeaterTileEntity(TileEntityHeater heater){
+		this.heater = heater;
+	}
 
+	@Override
+	public void update() {
+		System.out.println("UPDATIGN");
+		if(this.heater != null){
+			System.out.println(this.heater.getHeat() + "/" + this.heater.getMaxHeat());
+		}
+	}
 }
