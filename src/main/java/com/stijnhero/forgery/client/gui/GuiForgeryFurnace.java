@@ -38,5 +38,13 @@ public class GuiForgeryFurnace extends GuiContainer {
 		this.drawTexturedModalRect(165, 46, 176, 0, 3, 46);
 		
 		this.drawTexturedModalRect(5 + this.tileentity.temperature, 101, 8, 195, 5, 7);
+		
+		for(int i = 0; i < 9; i++){
+			int c = 0;
+			if(this.tileentity.durations[i] > 0){
+				c = 15 - (int)Math.floor(15 / this.tileentity.durations[i]);
+			}
+			this.drawTexturedModalRect(12 + (i) * 18, 26, 0, 195, 8, c);
+		}
 	}
 }

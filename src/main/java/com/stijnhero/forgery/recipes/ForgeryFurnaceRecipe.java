@@ -17,20 +17,24 @@ public class ForgeryFurnaceRecipe {
 	
 	public static ForgeryFurnaceRecipe getRecipe(ItemStack item){
 		for(int i = 0; i < recipes.size(); i++){
-			if(recipes.get(i).item.equals(item)){
+			if(recipes.get(i).item.isItemEqual(item)){
 				return recipes.get(i);
 			}
 		}
 		return null;
 	}
 	
-	public Item item;
+	public ItemStack item;
 	public Fluid fluid;
 	public double heat;
+	public int amount;
+	public int duration;
 	
-	public ForgeryFurnaceRecipe(Item item, Fluid fluid, int heat){
+	public ForgeryFurnaceRecipe(ItemStack item, Fluid fluid, double heat, int amount, int duration){
 		this.item = item;
 		this.fluid = fluid;
 		this.heat = heat;
+		this.amount = amount;
+		this.duration = duration;
 	}
 }

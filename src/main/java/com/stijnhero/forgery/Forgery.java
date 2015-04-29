@@ -5,6 +5,7 @@ import java.io.File;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import com.stijnhero.forgery.client.gui.container.GuiHandler;
 import com.stijnhero.forgery.proxy.Proxy;
+import com.stijnhero.forgery.recipes.ForgeryFurnaceRecipe;
 
 @Mod(modid = Forgery.MODID, version = Forgery.VERSION, guiFactory = "com.stijnhero.forgery.client.gui.ConfigGuiFactory")
 public class Forgery
@@ -54,6 +56,9 @@ public class Forgery
 		
 		ForgeryItems.Init();
 		ForgeryItems.RegisterItemsInPre();
+		
+		ForgeryFurnaceRecipe.addRecipe(new ForgeryFurnaceRecipe(new ItemStack(ForgeryBlocks.OreCopper), ForgeryFluids.LiquidCopper, 50, 100, 40));
+		ForgeryFurnaceRecipe.addRecipe(new ForgeryFurnaceRecipe(new ItemStack(ForgeryBlocks.OreTin), ForgeryFluids.LiquidCopper, 80, 100, 60));
 	}
 	
     @EventHandler

@@ -14,7 +14,8 @@ public class ContainerForgeryFurnace extends Container {
 
 	public TileEntityForgeryFurnace tileentity;
 	private int temperature = 0;
-
+	private int durations[] = new int[9];
+	
 	public ContainerForgeryFurnace(TileEntityForgeryFurnace tileentity, InventoryPlayer inventory_player) {
 		this.tileentity = tileentity;
 		for (int i = 0; i < tileentity.getSizeInventory(); i++) {
@@ -41,6 +42,9 @@ public class ContainerForgeryFurnace extends Container {
 	public void addCraftingToCrafters(ICrafting listener) {
 		super.addCraftingToCrafters(listener);
 		listener.sendProgressBarUpdate(this, 0, (int)this.tileentity.temperature);
+		for(int i = 0; i < 9; i++){
+			listener.sendProgressBarUpdate(this, i + 1, this.tileentity.durations[i]);
+		}
 	}
 
 	@Override
@@ -51,8 +55,14 @@ public class ContainerForgeryFurnace extends Container {
 			if(this.temperature != this.tileentity.temperature){
 				crafting.sendProgressBarUpdate(this, 0, this.tileentity.temperature);
 			}
+			for(int j = 0; j < 9; j++){
+				crafting.sendProgressBarUpdate(this, j + 1, this.tileentity.durations[j]);
+			}
 		}
 		this.temperature = this.tileentity.temperature;
+		for(int i = 0; i < 9; i++){
+			this.durations[i] = this.tileentity.durations[i];
+		}
 	}
 	
 	@Override
@@ -60,6 +70,9 @@ public class ContainerForgeryFurnace extends Container {
 	public void updateProgressBar(int id, int data) {
 		if(id == 0){
 			this.tileentity.temperature = data;
+		}
+		if(id >= 1 && id <= 9){
+			this.tileentity.durations[id - 1] = data;
 		}
 	}
 }
