@@ -23,9 +23,13 @@ public class TileEntityHeater extends TileEntity implements IUpdatePlayerListBox
 	double CoalAmount = 0.0;
 	boolean IsBurning;
 	double Multiplier;
+	double MaxHeat = 0.0;
+	double Heat = 0.0;
 	
-	public TileEntityHeater(double multi) {
+	
+	public TileEntityHeater(double multi, double max) {
 		this.Multiplier = multi;
+		this.MaxHeat = max;
 	}
 	
 	@Override
@@ -48,8 +52,14 @@ public class TileEntityHeater extends TileEntity implements IUpdatePlayerListBox
 		if(CoalAmount > 0){
 			CoalAmount--;
 			IsBurning = true;
+			
+			if(Heat < MaxHeat)
+				Heat++;
 		}else{
 			IsBurning = false;
+			
+			if(Heat > 0)
+				Heat--;
 		}
 		
 		BlockHeater.setState(IsBurning, this.worldObj, this.pos);
@@ -61,6 +71,14 @@ public class TileEntityHeater extends TileEntity implements IUpdatePlayerListBox
 	
 	public int getCoal(){
 		return (int) Math.floor(CoalAmount / Multiplier);
+	}
+	
+	public double getHeat(){
+		return Heat;
+	}
+	
+	public double getMaxHeat(){
+		return MaxHeat;
 	}
 	
 	public int getRenderType()
