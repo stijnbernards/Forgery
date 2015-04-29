@@ -5,6 +5,7 @@ itemGroup.Forgery=Forgery
 tile.orecopper.name=Copper Ore
 tile.oretin.name=Tin Ore
 tile.clayheater.name=Clay Heater
+tile.bronzeheater.name=Bronze Heater
 
 #Items
 item.flintaxe.name=Flint Axe

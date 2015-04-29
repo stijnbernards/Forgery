@@ -18,6 +18,7 @@ public class ForgeryBlocks {
 	public static Block OreTin;
 	public static Block ClayHeater;
 	public static Block Furnace;
+	public static Block BronzeHeater;
 	
 	public static boolean HarvestWood = true;
 	public static boolean LeavesDrop = true;
@@ -31,6 +32,7 @@ public class ForgeryBlocks {
 		OreTin = new BlockOre(Material.rock, 1).setHardness(3.0F).setUnlocalizedName("oretin");
 		ClayHeater = new BlockHeater(Material.rock, 100).setHardness(3.0F).setUnlocalizedName("clayheater");
 		Furnace = new BlockFurnace(Material.rock).setHardness(3.0F).setUnlocalizedName("furnace");
+		BronzeHeater = new BlockHeater(Material.rock, 500).setHardness(3.0F).setUnlocalizedName("bronzeheater");
 	}
 	
 	public static void RegisterBlocksInPre(){
@@ -38,8 +40,10 @@ public class ForgeryBlocks {
 		GameRegistry.registerBlock(ForgeryBlocks.OreTin, "oretin");
 		GameRegistry.registerBlock(ForgeryBlocks.ClayHeater, "clayheater");
 		GameRegistry.registerBlock(ForgeryBlocks.Furnace, "furnace");
+		GameRegistry.registerBlock(ForgeryBlocks.BronzeHeater, "bronzeheater");
 		
 		GameRegistry.registerTileEntity(TileEntityHeater.class, "forgery.clayheater");
+		GameRegistry.registerTileEntity(TileEntityHeater.class, "forgery.bronzeheater");
 		GameRegistry.registerTileEntity(TileEntityFurnace.class, "forgery.furnace");
 
 	}
