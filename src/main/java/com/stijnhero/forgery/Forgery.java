@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
-import com.stijnhero.forgery.client.gui.container.GuiHandler;
+import com.stijnhero.forgery.client.gui.GuiHandler;
 import com.stijnhero.forgery.proxy.Proxy;
 import com.stijnhero.forgery.recipes.ForgeryFurnaceRecipe;
 

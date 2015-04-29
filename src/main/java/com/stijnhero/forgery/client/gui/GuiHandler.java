@@ -1,16 +1,13 @@
-package com.stijnhero.forgery.client.gui.container;
-
-import com.stijnhero.forgery.client.gui.GuiForgeryFurnace;
-import com.stijnhero.forgery.client.gui.Guis;
-import com.stijnhero.forgery.common.tileentity.TileEntityForgeryFurnace;
+package com.stijnhero.forgery.client.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.network.IGuiHandler;
+
+import com.stijnhero.forgery.client.gui.container.ContainerForgeryFurnace;
+import com.stijnhero.forgery.common.tileentity.TileEntityForgeryFurnace;
 
 public class GuiHandler implements IGuiHandler {
 

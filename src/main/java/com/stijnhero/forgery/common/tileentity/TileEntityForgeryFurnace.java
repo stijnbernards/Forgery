@@ -120,7 +120,6 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 			}
 			this.durations[i] = 0;
 		}
-		System.out.println(this.tanks.size());
 	}
 
 	private void addFluid(FluidStack fluid) {
@@ -128,6 +127,7 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 			this.tanks.put(fluid.getFluid(), new FluidTank(10000));
 		}
 		this.tanks.get(fluid.getFluid()).fill(fluid, true);
+		worldObj.markBlockForUpdate(this.pos);
 	}
 
 	private int getCurrentFluid() {
@@ -236,9 +236,35 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 		if (recipe != null) {
 			max = recipe.duration;
 		}
-		if(max == 0){
+		if (max == 0) {
 			return 0;
 		}
 		return this.durations[index] * size / max;
+	}
+
+	@Override
+	protected void readSyncableDataFromNBT(NBTTagCompound compound) {
+		NBTTagList fluids = compound.getTagList("Fluids", 10);
+		this.tanks.clear();
+		for (int iter = 0; iter < fluids.tagCount(); iter++) {
+			NBTTagCompound nbt = (NBTTagCompound) fluids.getCompoundTagAt(iter);
+			FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
+			FluidTank tank = new FluidTank(MAX_TANK);
+			tank.fill(fluid, true);
+			this.tanks.put(fluid.getFluid(), tank);
+		}
+		super.readSyncableDataFromNBT(compound);
+	}
+
+	@Override
+	protected void writeSyncableDataToNBT(NBTTagCompound syncData) {
+		NBTTagList taglist = new NBTTagList();
+		for (FluidTank tank : this.tanks.values()) {
+			NBTTagCompound nbt = new NBTTagCompound();
+			tank.writeToNBT(nbt);
+			taglist.appendTag(nbt);
+		}
+		syncData.setTag("Fluids", taglist);
+		super.writeSyncableDataToNBT(syncData);
 	}
 }

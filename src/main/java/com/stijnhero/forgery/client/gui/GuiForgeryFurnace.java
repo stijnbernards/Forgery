@@ -18,7 +18,7 @@ import com.stijnhero.forgery.common.tileentity.TileEntityForgeryFurnace;
 
 public class GuiForgeryFurnace extends GuiContainer {
 
-	private static final ResourceLocation texture = new ResourceLocation("forgery", "gui/forgery_furnace.png");
+	private static final ResourceLocation texture = new ResourceLocation("forgery", "textures/gui/forgery_furnace.png");
 	private TileEntityForgeryFurnace tileentity;
 	
 	public GuiForgeryFurnace(TileEntityForgeryFurnace tileentity, InventoryPlayer inventory_player) {
@@ -54,7 +54,7 @@ public class GuiForgeryFurnace extends GuiContainer {
 			Fluid fluid = tank.getFluid().getFluid();
 			// render fluids in tank
 			
-			System.out.println("COLOR: " + fluid.getColor());
+			System.out.println("COLOR: " + fluid.getLocalizedName());
 		}
 		
 		this.drawTexturedModalRect(8, 46, 176, 0, 3, 46);

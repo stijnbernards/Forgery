@@ -108,6 +108,8 @@ public abstract class TileEntityForgery extends TileEntity implements IInventory
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		readSyncableDataFromNBT(pkt.getNbtCompound());
+		markDirty();
+		worldObj.markBlockForUpdate(pos);
 	}
 
 	protected void readSyncableDataFromNBT(NBTTagCompound nbtCompound) {
