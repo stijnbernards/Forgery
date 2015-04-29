@@ -42,8 +42,9 @@ public class GuiForgeryFurnace extends GuiContainer {
 		for(int i = 0; i < 9; i++){
 			int c = 0;
 			if(this.tileentity.durations[i] > 0){
-				c = 15 - (int)Math.floor(15 / this.tileentity.durations[i]);
+				c = this.tileentity.getCraftingProgressScaled(i, 15);
 			}
+			System.out.println(c);
 			this.drawTexturedModalRect(12 + (i) * 18, 26, 0, 195, 8, c);
 		}
 	}

@@ -2,17 +2,23 @@ package com.stijnhero.forgery.common.tileentity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.stijnhero.forgery.recipes.ForgeryFurnaceRecipe;
 
@@ -96,7 +102,7 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 				if (recipe != null) {
 					if (this.heat >= recipe.heat && this.tank.getFluidAmount() + recipe.amount <= this.tank.getCapacity()) {
 						if (this.durations[i] >= recipe.duration) {
-							this.tank.fill(new FluidStack(recipe.fluid, recipe.amount), true);
+							this.addFluid(new FluidStack(recipe.fluid, recipe.amount));
 							this.inventory[i].stackSize--;
 							this.durations[i] = 0;
 							if (this.inventory[i].stackSize <= 0) {
@@ -111,7 +117,11 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 			}
 			this.durations[i] = 0;
 		}
-		System.out.println(this.tank.getFluidAmount());
+		//System.out.println(this.tank.getFluidAmount() + "/" + this.tank.getCapacity());
+	}
+	
+	private void addFluid(FluidStack fluid){
+		this.tank.fill(fluid, true);
 	}
 
 	public static void loadHeater(World world, BlockPos pos) {
@@ -168,4 +178,45 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
 		return this.tank.drain(maxDrain, doDrain);
 	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
+		NBTTagList list = compound.getTagList("Items", Constants.NBT.TAG_COMPOUND);
+		this.inventory = new ItemStack[this.getSizeInventory()];
+		for(int i = 0; i < list.tagCount(); i++){
+			NBTTagCompound tcompound = (NBTTagCompound)list.get(i);
+			byte b = tcompound.getByte("Slot");
+			if(b >= 0 && b < this.getSizeInventory()){
+				this.inventory[b] = ItemStack.loadItemStackFromNBT(tcompound);
+			}
+		}
+		this.durations = compound.getIntArray("Durations");
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound compound) {
+		super.writeToNBT(compound);
+		NBTTagList list = new NBTTagList();
+		for(int i = 0; i < this.getSizeInventory(); i++){
+			if(this.inventory[i] != null){
+				NBTTagCompound ncompound = new NBTTagCompound();
+				ncompound.setByte("Slot", (byte)i);
+				this.inventory[i].writeToNBT(ncompound);
+				list.appendTag(ncompound);
+			}
+		}
+		compound.setTag("Items", list);
+		compound.setTag("Durations", new NBTTagIntArray(this.durations));
+	}
+	
+    @SideOnly(Side.CLIENT)
+    public int getCraftingProgressScaled(int index, int size){
+    	ForgeryFurnaceRecipe recipe = ForgeryFurnaceRecipe.getRecipe(this.inventory[index]);
+    	int max = 0;
+    	if(recipe != null){
+    		max = recipe.duration;
+    	}
+        return this.durations[index] * size / max;
+    }
 }

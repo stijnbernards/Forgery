@@ -8,7 +8,7 @@ import net.minecraft.util.IChatComponent;
 
 public abstract class TileEntityForgery extends TileEntity implements IInventory {
 
-	protected ItemStack[] inventory;
+	public ItemStack[] inventory;
 	
 	@Override
 	public boolean hasCustomName() {
