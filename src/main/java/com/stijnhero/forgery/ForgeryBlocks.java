@@ -3,24 +3,18 @@ package com.stijnhero.forgery;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-<<<<<<< HEAD
 import com.stijnhero.forgery.common.block.BlockForgeryFurnace;
 import com.stijnhero.forgery.common.block.BlockHeater;
 import com.stijnhero.forgery.common.block.BlockLiquidOre;
 import com.stijnhero.forgery.common.block.BlockOre;
 import com.stijnhero.forgery.common.tileentity.TileEntityForgeryFurnace;
-=======
 import com.stijnhero.forgery.common.block.BlockFluidChannel;
-import com.stijnhero.forgery.common.block.BlockFurnace;
 import com.stijnhero.forgery.common.block.BlockHeater;
 import com.stijnhero.forgery.common.block.BlockLiquidOre;
 import com.stijnhero.forgery.common.block.BlockOre;
 import com.stijnhero.forgery.common.tileentity.TileEntityFluidChannel;
-import com.stijnhero.forgery.common.tileentity.TileEntityFurnace;
->>>>>>> Stijn
 import com.stijnhero.forgery.common.tileentity.TileEntityHeater;
 import com.stijnhero.forgery.common.worldgen.WorldGen;
 
@@ -30,6 +24,7 @@ public class ForgeryBlocks {
 	public static Block OreTin;
 	public static Block ClayHeater;
 	public static Block BronzeHeater;
+	public static Block LiquidCopper;
 	public static Block ForgeryFurnace;
 	public static Block LiquidCopperBlock;
 	public static Block FluidChannel;
@@ -50,13 +45,10 @@ public class ForgeryBlocks {
 		OreTin = new BlockOre(Material.rock, 1).setHardness(3.0F).setUnlocalizedName("oretin");
 		ClayHeater = new BlockHeater(Material.rock, 100, 100).setHardness(3.0F).setUnlocalizedName("clayheater");
 		BronzeHeater = new BlockHeater(Material.rock, 500, 500).setHardness(3.0F).setUnlocalizedName("bronzeheater");
-<<<<<<< HEAD
 		ForgeryFurnace = new BlockForgeryFurnace(Material.rock).setHardness(3.0F).setUnlocalizedName("forgery_furnace");
-=======
 		FluidChannel = new BlockFluidChannel(false).setHardness(3.0F).setUnlocalizedName("fluidchannel");
 
 		FluidChannelTest = new BlockFluidChannel(true).setHardness(3.0F).setUnlocalizedName("fluidchanneltest");
->>>>>>> Stijn
 	}
 	
 	public static void RegisterBlocksInPre(){
@@ -71,13 +63,9 @@ public class ForgeryBlocks {
 		GameRegistry.registerBlock(ForgeryBlocks.FluidChannelTest, "fluidchanneltest");
 		
 		GameRegistry.registerTileEntity(TileEntityHeater.class, "forgery.clayheater");
-<<<<<<< HEAD
 		GameRegistry.registerTileEntity(TileEntityForgeryFurnace.class, "forgery.furnace");
-=======
 		GameRegistry.registerTileEntity(TileEntityHeater.class, "forgery.bronzeheater");
-		GameRegistry.registerTileEntity(TileEntityFurnace.class, "forgery.furnace");
 		GameRegistry.registerTileEntity(TileEntityFluidChannel.class, "forgery.fluidchannel");
->>>>>>> Stijn
 	}
 	
 	public static void EditBlocks(){
