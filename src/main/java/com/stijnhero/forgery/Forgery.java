@@ -45,6 +45,9 @@ public class Forgery
 	public void preInit(FMLPreInitializationEvent event){		
 		ForgeryConfiguration.init(new File(event.getModConfigurationDirectory(), "Forgery.cfg"));
 		
+		ForgeryFluids.Init();
+		ForgeryFluids.RegisterFluidsInPre();
+		
 		ForgeryBlocks.Init();
 		ForgeryBlocks.RegisterBlocksInPre();
 		ForgeryBlocks.WorldGen();

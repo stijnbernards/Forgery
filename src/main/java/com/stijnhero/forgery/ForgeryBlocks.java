@@ -6,9 +6,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-import com.stijnhero.forgery.common.block.BlockForgeryDynamicLiquid;
 import com.stijnhero.forgery.common.block.BlockFurnace;
 import com.stijnhero.forgery.common.block.BlockHeater;
+import com.stijnhero.forgery.common.block.BlockLiquidOre;
 import com.stijnhero.forgery.common.block.BlockOre;
 import com.stijnhero.forgery.common.tileentity.TileEntityFurnace;
 import com.stijnhero.forgery.common.tileentity.TileEntityHeater;
@@ -20,7 +20,7 @@ public class ForgeryBlocks {
 	public static Block ClayHeater;
 	public static Block Furnace;
 	public static Block BronzeHeater;
-	public static Block LiquidCopper;
+	public static Block LiquidCopperBlock;
 	
 	public static boolean HarvestWood = true;
 	public static boolean LeavesDrop = true;
@@ -30,7 +30,7 @@ public class ForgeryBlocks {
 	}
 	
 	public static void Init(){
-		LiquidCopper = new BlockForgeryDynamicLiquid(Material.lava);
+		LiquidCopperBlock = new BlockLiquidOre(ForgeryFluids.LiquidCopper, Material.lava).setUnlocalizedName("liquidcopper");
 		OreCopper = new BlockOre(Material.rock, 1).setHardness(3.0F).setUnlocalizedName("orecopper");
 		OreTin = new BlockOre(Material.rock, 1).setHardness(3.0F).setUnlocalizedName("oretin");
 		ClayHeater = new BlockHeater(Material.rock, 100, 100).setHardness(3.0F).setUnlocalizedName("clayheater");
@@ -44,6 +44,7 @@ public class ForgeryBlocks {
 		GameRegistry.registerBlock(ForgeryBlocks.ClayHeater, "clayheater");
 		GameRegistry.registerBlock(ForgeryBlocks.Furnace, "furnace");
 		GameRegistry.registerBlock(ForgeryBlocks.BronzeHeater, "bronzeheater");
+		GameRegistry.registerBlock(ForgeryBlocks.LiquidCopperBlock, "liquidcopper");
 		
 		GameRegistry.registerTileEntity(TileEntityHeater.class, "forgery.clayheater");
 		GameRegistry.registerTileEntity(TileEntityHeater.class, "forgery.bronzeheater");
