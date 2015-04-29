@@ -42,7 +42,7 @@ public class Forgery
 			return Items.iron_ingot;
 		}
 	};
-	
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event){		
 		ForgeryConfiguration.init(new File(event.getModConfigurationDirectory(), "Forgery.cfg"));
@@ -64,7 +64,7 @@ public class Forgery
     @EventHandler
     public void load(FMLInitializationEvent event){
     	NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
-    	
+
     	if(event.getSide() == Side.CLIENT)
     	{
     	    ForgeryItems.RegisterItemModels();
