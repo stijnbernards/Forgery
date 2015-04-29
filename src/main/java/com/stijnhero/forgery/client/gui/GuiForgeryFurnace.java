@@ -36,5 +36,7 @@ public class GuiForgeryFurnace extends GuiContainer {
 		mc.renderEngine.bindTexture(texture);
 		this.drawTexturedModalRect(8, 46, 176, 0, 3, 46);
 		this.drawTexturedModalRect(165, 46, 176, 0, 3, 46);
+		
+		this.drawTexturedModalRect(5 + this.tileentity.temperature, 101, 8, 195, 5, 7);
 	}
 }
