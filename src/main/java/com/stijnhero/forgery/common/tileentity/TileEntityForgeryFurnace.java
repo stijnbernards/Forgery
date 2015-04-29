@@ -1,5 +1,8 @@
 package com.stijnhero.forgery.common.tileentity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,7 +15,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -24,7 +26,8 @@ import com.stijnhero.forgery.recipes.ForgeryFurnaceRecipe;
 
 public class TileEntityForgeryFurnace extends TileEntityForgery implements IFluidHandler, IUpdatePlayerListBox {
 
-	private FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+	public static final int MAX_TANK = 10000;
+	public Map<Fluid, FluidTank> tanks;
 
 	private TileEntityHeater heater = null;
 
@@ -35,7 +38,7 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 
 	public TileEntityForgeryFurnace() {
 		this.inventory = new ItemStack[9];
-		this.tank.setCapacity(10000);
+		this.tanks = new HashMap<Fluid, FluidTank>();
 
 		for (int i = 0; i < 9; i++) {
 			this.durations[i] = 0;
@@ -100,7 +103,7 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 			if (this.inventory[i] != null && this.inventory[i].stackSize > 0) {
 				ForgeryFurnaceRecipe recipe = ForgeryFurnaceRecipe.getRecipe(this.inventory[i]);
 				if (recipe != null) {
-					if (this.heat >= recipe.heat && this.tank.getFluidAmount() + recipe.amount <= this.tank.getCapacity()) {
+					if (this.heat >= recipe.heat && this.getCurrentFluid() + recipe.amount <= MAX_TANK) {
 						if (this.durations[i] >= recipe.duration) {
 							this.addFluid(new FluidStack(recipe.fluid, recipe.amount));
 							this.inventory[i].stackSize--;
@@ -117,11 +120,24 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 			}
 			this.durations[i] = 0;
 		}
-		//System.out.println(this.tank.getFluidAmount() + "/" + this.tank.getCapacity());
+		System.out.println(this.tanks.size());
 	}
-	
-	private void addFluid(FluidStack fluid){
-		this.tank.fill(fluid, true);
+
+	private void addFluid(FluidStack fluid) {
+		if (!this.tanks.containsKey(fluid.getFluid())) {
+			this.tanks.put(fluid.getFluid(), new FluidTank(10000));
+		}
+		this.tanks.get(fluid.getFluid()).fill(fluid, true);
+	}
+
+	private int getCurrentFluid() {
+		int total = 0;
+		for (FluidTank tank : this.tanks.values()) {
+			if (tank != null) {
+				total += tank.getFluidAmount();
+			}
+		}
+		return total;
 	}
 
 	public static void loadHeater(World world, BlockPos pos) {
@@ -148,15 +164,16 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 
 	@Override
 	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-		return this.tank.fill(resource, doFill);
+		return 0;// this.tank.fill(resource, doFill);
 	}
 
 	@Override
 	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-		if (resource == null || !resource.isFluidEqual(this.tank.getFluid())) {
-			return null;
-		}
-		return this.tank.drain(resource.amount, doDrain);
+		// if (resource == null || !resource.isFluidEqual(this.tank.getFluid()))
+		// {
+		// return null;
+		// }
+		return null;// this.tank.drain(resource.amount, doDrain);
 	}
 
 	@Override
@@ -171,37 +188,37 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 
 	@Override
 	public FluidTankInfo[] getTankInfo(EnumFacing from) {
-		return new FluidTankInfo[] { this.tank.getInfo() };
+		return null;// new FluidTankInfo[] { this.tank.getInfo() };
 	}
 
 	@Override
 	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-		return this.tank.drain(maxDrain, doDrain);
+		return null;// this.tank.drain(maxDrain, doDrain);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		NBTTagList list = compound.getTagList("Items", Constants.NBT.TAG_COMPOUND);
 		this.inventory = new ItemStack[this.getSizeInventory()];
-		for(int i = 0; i < list.tagCount(); i++){
-			NBTTagCompound tcompound = (NBTTagCompound)list.get(i);
+		for (int i = 0; i < list.tagCount(); i++) {
+			NBTTagCompound tcompound = (NBTTagCompound) list.get(i);
 			byte b = tcompound.getByte("Slot");
-			if(b >= 0 && b < this.getSizeInventory()){
+			if (b >= 0 && b < this.getSizeInventory()) {
 				this.inventory[b] = ItemStack.loadItemStackFromNBT(tcompound);
 			}
 		}
 		this.durations = compound.getIntArray("Durations");
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		NBTTagList list = new NBTTagList();
-		for(int i = 0; i < this.getSizeInventory(); i++){
-			if(this.inventory[i] != null){
+		for (int i = 0; i < this.getSizeInventory(); i++) {
+			if (this.inventory[i] != null) {
 				NBTTagCompound ncompound = new NBTTagCompound();
-				ncompound.setByte("Slot", (byte)i);
+				ncompound.setByte("Slot", (byte) i);
 				this.inventory[i].writeToNBT(ncompound);
 				list.appendTag(ncompound);
 			}
@@ -209,14 +226,19 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 		compound.setTag("Items", list);
 		compound.setTag("Durations", new NBTTagIntArray(this.durations));
 	}
-	
-    @SideOnly(Side.CLIENT)
-    public int getCraftingProgressScaled(int index, int size){
-    	ForgeryFurnaceRecipe recipe = ForgeryFurnaceRecipe.getRecipe(this.inventory[index]);
-    	int max = 0;
-    	if(recipe != null){
-    		max = recipe.duration;
-    	}
-        return this.durations[index] * size / max;
-    }
+
+	@SideOnly(Side.CLIENT)
+	public int getCraftingProgressScaled(int index, int size) {
+		ForgeryFurnaceRecipe recipe = ForgeryFurnaceRecipe.getRecipe(this.inventory[index]);
+		int max = 0;
+		if (this.durations[index] == 0)
+			return 0;
+		if (recipe != null) {
+			max = recipe.duration;
+		}
+		if(max == 0){
+			return 0;
+		}
+		return this.durations[index] * size / max;
+	}
 }
