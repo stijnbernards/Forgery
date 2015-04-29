@@ -1,9 +1,0 @@
-{
-    "variants": {
-        "normal": { "model": "forgery:heater" }
-        "facing=north": { "model": "forgery:heater" },
-        "facing=south": { "model": "forgery:heater", "y": 180 },
-        "facing=west":  { "model": "forgery:heater", "y": 270 },
-        "facing=east":  { "model": "forgery:heater", "y": 90 }
-    }
-}
