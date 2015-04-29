@@ -34,11 +34,13 @@ public class BlockHeater extends BlockContainer{
 
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	private double Multiplier;
+	private double maxHeat;
 	
-	public BlockHeater(Material materialIn, double multiplier) {
+	public BlockHeater(Material materialIn, double multiplier, double max) {
 		super(materialIn);
         //this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
 		this.Multiplier = multiplier;
+		this.maxHeat = max;
 		this.setCreativeTab(Forgery.Forgery);
 	}
 	
@@ -217,7 +219,7 @@ public class BlockHeater extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
-		return new TileEntityHeater(Multiplier);
+		return new TileEntityHeater(Multiplier, maxHeat);
 	}
 	
 	@Override
