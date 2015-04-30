@@ -73,10 +73,16 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 	}
 
 	boolean f = true;
+	int ticks = 0;
 
 	@Override
 	public void update() {
-		this.outputFluids();
+		if (ticks == 12) {
+			this.outputFluids();
+			ticks = 0;
+		}
+		ticks++;
+
 		if (!this.worldObj.isRemote) {
 			if (this.heater == null && f) {
 				f = false;
@@ -224,6 +230,8 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 		for (int iter = 0; iter < fluids.tagCount(); iter++) {
 			NBTTagCompound nbt = (NBTTagCompound) fluids.getCompoundTagAt(iter);
 			FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
+			if (fluid == null)
+				continue;
 			FluidTank tank = new FluidTank(MAX_TANK);
 			tank.fill(fluid, true);
 			this.tanks.put(fluid.getFluid(), tank);
@@ -308,28 +316,18 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 
 				TileEntity te = this.worldObj.getTileEntity(this.pos.offset(fluids));
 				if (te != null && te instanceof IFluidHandler) {
-					System.out.println("FLUID ITEM");
 					if (((IFluidHandler) te).canFill(fluids, fluid.getFluid())) {
-						FluidStack temp = fluid.copy();
-						temp.amount = 100;
-						((IFluidHandler) te).fill(fluids, fluid, true);
-						tank.drain(100, true);
+						if (te.hasWorldObj()) {
+							FluidStack temp = fluid.copy();
+							temp.amount = 100;
+							((IFluidHandler) te).fill(fluids, fluid, true);
+							tank.drain(100, true);
+							this.worldObj.markBlockForUpdate(pos);
+							te.markDirty();
+						}
 					}
 				}
 			}
 		}
-		// FluidStack fluid = this.tanks.get(0).getFluid();
-		// // this.tanks.get(0).getFluid();
-		//
-		// TileEntity te = this.worldObj.getTileEntity(this.pos.offset(fluids));
-		// if(te != null && te instanceof IFluidHandler){
-		// System.out.println("FLUID ITEM");
-		// if(((IFluidHandler) te).canFill(fluids, fluid.getFluid())){
-		// FluidStack temp = fluid.copy();
-		// temp.amount = 100;
-		// ((IFluidHandler) te).fill(fluids, fluid, true);
-		// fluid.amount -= 100;
-		// }
-		// }
 	}
 }

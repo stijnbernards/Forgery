@@ -51,6 +51,9 @@ public class GuiForgeryFurnace extends GuiContainer {
 		
 		int s = 0;
 		for(FluidTank tank : this.tileentity.tanks.values()){
+			if(tank == null) continue;
+			if(tank.getFluid() == null) continue;
+			if(tank.getFluid().getFluid() == null) continue;
 			Fluid fluid = tank.getFluid().getFluid();
 			int height = tank.getFluidAmount() * 52 / TileEntityForgeryFurnace.MAX_TANK + 1;
 			if(fluid.getName().equals("fluidliquidcopper")){
