@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 import com.stijnhero.forgery.client.gui.GuiHandler;
-import com.stijnhero.forgery.proxy.Proxy;
+import com.stijnhero.forgery.proxy.CommonProxy;
 import com.stijnhero.forgery.recipes.ForgeryFurnaceRecipe;
 
 @Mod(modid = Forgery.MODID, version = Forgery.VERSION, guiFactory = "com.stijnhero.forgery.client.gui.ConfigGuiFactory")
@@ -27,14 +27,14 @@ public class Forgery
     public static final String VERSION = "0.1";
     public static final String NAME = "Forgery";
     
-    public static final String CLIENT_PROXY = "com.stijnhero.forgery.proxy.Client";
-    public static final String SERVER_PROXY = "com.stijnhero.forgery.proxy.Server";
+    public static final String CLIENT_PROXY = "com.stijnhero.forgery.proxy.ClientProxy";
+    public static final String SERVER_PROXY = "com.stijnhero.forgery.proxy.CommonProxy";
     
     @Instance
     public static Forgery instance;
     
     @SidedProxy(clientSide = CLIENT_PROXY, serverSide = SERVER_PROXY)
-    public static Proxy proxy;
+    public static CommonProxy proxy;
 
     //Creative tabs
     public static CreativeTabs Forgery = new CreativeTabs("Forgery"){
@@ -59,6 +59,8 @@ public class Forgery
 		
 		ForgeryFurnaceRecipe.addRecipe(new ForgeryFurnaceRecipe(new ItemStack(ForgeryBlocks.OreCopper), ForgeryFluids.LiquidCopper, 50, 100, 40));
 		ForgeryFurnaceRecipe.addRecipe(new ForgeryFurnaceRecipe(new ItemStack(ForgeryBlocks.OreTin), ForgeryFluids.LiquidTin, 80, 100, 60));
+		
+		proxy.registerRenderers();
 	}
 	
     @EventHandler
