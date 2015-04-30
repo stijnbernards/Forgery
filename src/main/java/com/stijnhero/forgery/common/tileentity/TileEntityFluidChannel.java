@@ -328,7 +328,7 @@ public class TileEntityFluidChannel extends TileEntity implements IFluidHandler,
         if (connected.contains(lastProvider))
             connected.remove(lastProvider);
 
-        int output = Math.min(internalTank.getFluidAmount(), 1);
+        int output = Math.min(internalTank.getFluidAmount(), 100);
         int connectedAmount = connected.size();
         if (connectedAmount < 1)
             connectedAmount = 1;
@@ -356,7 +356,7 @@ public class TileEntityFluidChannel extends TileEntity implements IFluidHandler,
         if (inputTank != null && inputTank.getFluid() != null) //Tank can be null if input was received from top
         {
 
-            FluidStack tempFS = new FluidStack(inputTank.getFluid().getFluid(), Math.min(inputTank.getFluidAmount(), 1));
+            FluidStack tempFS = new FluidStack(inputTank.getFluid().getFluid(), Math.min(inputTank.getFluidAmount(), 100));
             int fit = internalTank.fill(tempFS, false);
 
             if (fit > 0)
