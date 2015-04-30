@@ -1,8 +1,10 @@
 package com.stijnhero.forgery.common.tileentity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,6 +24,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.stijnhero.forgery.common.block.BlockForgeryFurnace;
 import com.stijnhero.forgery.recipes.ForgeryFurnaceRecipe;
 
 public class TileEntityForgeryFurnace extends TileEntityForgery implements IFluidHandler, IUpdatePlayerListBox {
@@ -73,6 +76,7 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 
 	@Override
 	public void update() {
+		this.outputFluids();
 		if (!this.worldObj.isRemote) {
 			if (this.heater == null && f) {
 				f = false;
@@ -130,7 +134,7 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 		worldObj.markBlockForUpdate(this.pos);
 	}
 
-	private int getCurrentFluid() {
+	public int getCurrentFluid() {
 		int total = 0;
 		for (FluidTank tank : this.tanks.values()) {
 			if (tank != null) {
@@ -164,16 +168,17 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 
 	@Override
 	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-		return 0;// this.tank.fill(resource, doFill);
+		return 0;
 	}
 
 	@Override
 	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-		// if (resource == null || !resource.isFluidEqual(this.tank.getFluid()))
-		// {
-		// return null;
-		// }
-		return null;// this.tank.drain(resource.amount, doDrain);
+		if (resource == null)
+			return null;
+		if (this.tanks.containsKey(resource.getFluid())) {
+			return this.tanks.get(resource.getFluid()).drain(resource.amount, doDrain);
+		}
+		return null;
 	}
 
 	@Override
@@ -188,12 +193,16 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 
 	@Override
 	public FluidTankInfo[] getTankInfo(EnumFacing from) {
-		return null;// new FluidTankInfo[] { this.tank.getInfo() };
+		return null;
+		// if(this.tanks.size() <= 0) return null;
+		// return new FluidTankInfo[] { this.tanks.get(0).getInfo() };
 	}
 
 	@Override
 	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-		return null;// this.tank.drain(maxDrain, doDrain);
+		return null;
+		// if(this.tanks.size() <= 0) return null;
+		// return this.tanks.get(0).drain(maxDrain, doDrain);
 	}
 
 	@Override
@@ -209,6 +218,16 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 			}
 		}
 		this.durations = compound.getIntArray("Durations");
+
+		NBTTagList fluids = compound.getTagList("Fluids", Constants.NBT.TAG_COMPOUND);
+		this.tanks.clear();
+		for (int iter = 0; iter < fluids.tagCount(); iter++) {
+			NBTTagCompound nbt = (NBTTagCompound) fluids.getCompoundTagAt(iter);
+			FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
+			FluidTank tank = new FluidTank(MAX_TANK);
+			tank.fill(fluid, true);
+			this.tanks.put(fluid.getFluid(), tank);
+		}
 	}
 
 	@Override
@@ -225,6 +244,14 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 		}
 		compound.setTag("Items", list);
 		compound.setTag("Durations", new NBTTagIntArray(this.durations));
+
+		NBTTagList taglist = new NBTTagList();
+		for (FluidTank tank : this.tanks.values()) {
+			NBTTagCompound nbt = new NBTTagCompound();
+			tank.writeToNBT(nbt);
+			taglist.appendTag(nbt);
+		}
+		compound.setTag("Fluids", taglist);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -244,7 +271,7 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 
 	@Override
 	protected void readSyncableDataFromNBT(NBTTagCompound compound) {
-		NBTTagList fluids = compound.getTagList("Fluids", 10);
+		NBTTagList fluids = compound.getTagList("Fluids", Constants.NBT.TAG_COMPOUND);
 		this.tanks.clear();
 		for (int iter = 0; iter < fluids.tagCount(); iter++) {
 			NBTTagCompound nbt = (NBTTagCompound) fluids.getCompoundTagAt(iter);
@@ -266,5 +293,43 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 		}
 		syncData.setTag("Fluids", taglist);
 		super.writeSyncableDataToNBT(syncData);
+	}
+
+	private void outputFluids() {
+		BlockForgeryFurnace block = (BlockForgeryFurnace) this.worldObj.getBlockState(pos).getBlock();
+		IBlockState state = this.worldObj.getBlockState(pos);
+		EnumFacing enumfacing = (EnumFacing) state.getValue(block.FACING);
+		EnumFacing slug = enumfacing.rotateY();
+		EnumFacing fluids = enumfacing.rotateY().rotateY().rotateY();
+
+		for (FluidTank tank : this.tanks.values()) {
+			if (tank != null && tank.getFluidAmount() > 0) {
+				FluidStack fluid = tank.getFluid();
+
+				TileEntity te = this.worldObj.getTileEntity(this.pos.offset(fluids));
+				if (te != null && te instanceof IFluidHandler) {
+					System.out.println("FLUID ITEM");
+					if (((IFluidHandler) te).canFill(fluids, fluid.getFluid())) {
+						FluidStack temp = fluid.copy();
+						temp.amount = 100;
+						((IFluidHandler) te).fill(fluids, fluid, true);
+						tank.drain(100, true);
+					}
+				}
+			}
+		}
+		// FluidStack fluid = this.tanks.get(0).getFluid();
+		// // this.tanks.get(0).getFluid();
+		//
+		// TileEntity te = this.worldObj.getTileEntity(this.pos.offset(fluids));
+		// if(te != null && te instanceof IFluidHandler){
+		// System.out.println("FLUID ITEM");
+		// if(((IFluidHandler) te).canFill(fluids, fluid.getFluid())){
+		// FluidStack temp = fluid.copy();
+		// temp.amount = 100;
+		// ((IFluidHandler) te).fill(fluids, fluid, true);
+		// fluid.amount -= 100;
+		// }
+		// }
 	}
 }
