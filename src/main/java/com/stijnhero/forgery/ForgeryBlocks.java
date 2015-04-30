@@ -73,4 +73,10 @@ public class ForgeryBlocks {
 		if(HarvestWood)
 			MinecraftForge.EVENT_BUS.register(new ForgeryEvents());
 	}
+	
+	public static void RegisterItemBlockModels(){
+		RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
+		renderItem.getItemModelMesher().register(Item.getItemFromBlock(OreCopper), 0, new ModelResourceLocation("forgery:orecopper", "inventory"));
+		renderItem.getItemModelMesher().register(Item.getItemFromBlock(OreTin), 0, new ModelResourceLocation("forgery:oretin", "inventory"));
+    }
 }

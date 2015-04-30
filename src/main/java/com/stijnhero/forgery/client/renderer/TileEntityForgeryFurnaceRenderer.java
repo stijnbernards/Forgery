@@ -24,7 +24,7 @@ public class TileEntityForgeryFurnaceRenderer extends TileEntitySpecialRenderer 
 			double posY, double posZ, float p_180535_8_, int p_180535_9_) {
         GL11.glPushMatrix();
         GL11.glTranslatef((float) posX + 0.5F, (float) posY + 1.5F, (float) posZ + 0.5F);
-        ResourceLocation textures = (new ResourceLocation("Texture")); 
+		ResourceLocation textures = (new ResourceLocation("Texture")); 
         Minecraft.getMinecraft().renderEngine.bindTexture(textures);                       
         GL11.glPushMatrix();
         GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);

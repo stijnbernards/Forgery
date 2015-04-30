@@ -295,8 +295,10 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 	protected void writeSyncableDataToNBT(NBTTagCompound syncData) {
 		NBTTagList taglist = new NBTTagList();
 		for (FluidTank tank : this.tanks.values()) {
+			if (tank.getFluid() == null)
+				continue;
 			NBTTagCompound nbt = new NBTTagCompound();
-			tank.writeToNBT(nbt);
+			tank.getFluid().writeToNBT(nbt);
 			taglist.appendTag(nbt);
 		}
 		syncData.setTag("Fluids", taglist);
@@ -316,14 +318,26 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 
 				TileEntity te = this.worldObj.getTileEntity(this.pos.offset(fluids));
 				if (te != null && te instanceof IFluidHandler) {
-					if (((IFluidHandler) te).canFill(fluids, fluid.getFluid())) {
-						if (te.hasWorldObj()) {
+					IFluidHandler f = (IFluidHandler) te;
+					if (f.canFill(fluids.getOpposite(), fluid.getFluid())) {
+						if (f.getTankInfo(fluids.getOpposite())[0].fluid == null) {
 							FluidStack temp = fluid.copy();
 							temp.amount = 100;
-							((IFluidHandler) te).fill(fluids, fluid, true);
-							tank.drain(100, true);
-							this.worldObj.markBlockForUpdate(pos);
-							te.markDirty();
+							if (((IFluidHandler) te).fill(fluids.getOpposite(), fluid, true) > 0) {
+								tank.drain(100, true);
+								this.worldObj.markBlockForUpdate(pos);
+								te.markDirty();
+							}
+						} else {
+							if (f.getTankInfo(fluids.getOpposite())[0].fluid.isFluidEqual(fluid)) {
+								FluidStack temp = fluid.copy();
+								temp.amount = 100;
+								if (((IFluidHandler) te).fill(fluids.getOpposite(), fluid, true) > 0) {
+									tank.drain(100, true);
+									this.worldObj.markBlockForUpdate(pos);
+									te.markDirty();
+								}
+							}
 						}
 					}
 				}
