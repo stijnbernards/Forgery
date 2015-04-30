@@ -18,7 +18,7 @@ public class ContainerForgeryFurnace extends Container {
 	
 	public ContainerForgeryFurnace(TileEntityForgeryFurnace tileentity, InventoryPlayer inventory_player) {
 		this.tileentity = tileentity;
-		for (int i = 0; i < tileentity.getSizeInventory(); i++) {
+		for (int i = 0; i < 9; i++) {
 			this.addSlotToContainer(new Slot(this.tileentity, i, 8 + 18 * i, 8));
 		}
 

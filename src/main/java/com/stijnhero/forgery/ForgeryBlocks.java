@@ -2,19 +2,20 @@ package com.stijnhero.forgery;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import com.stijnhero.forgery.common.block.BlockFluidChannel;
 import com.stijnhero.forgery.common.block.BlockForgeryFurnace;
 import com.stijnhero.forgery.common.block.BlockHeater;
 import com.stijnhero.forgery.common.block.BlockLiquidOre;
 import com.stijnhero.forgery.common.block.BlockOre;
-import com.stijnhero.forgery.common.tileentity.TileEntityForgeryFurnace;
-import com.stijnhero.forgery.common.block.BlockFluidChannel;
-import com.stijnhero.forgery.common.block.BlockHeater;
-import com.stijnhero.forgery.common.block.BlockLiquidOre;
-import com.stijnhero.forgery.common.block.BlockOre;
 import com.stijnhero.forgery.common.tileentity.TileEntityFluidChannel;
+import com.stijnhero.forgery.common.tileentity.TileEntityForgeryFurnace;
 import com.stijnhero.forgery.common.tileentity.TileEntityHeater;
 import com.stijnhero.forgery.common.worldgen.WorldGen;
 

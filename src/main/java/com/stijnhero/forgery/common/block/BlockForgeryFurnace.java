@@ -4,7 +4,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -21,24 +24,37 @@ public class BlockForgeryFurnace extends BlockContainer {
 		super(material);
 		this.setCreativeTab(Forgery.Forgery);
 	}
-	
+
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
 		return new TileEntityForgeryFurnace();
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntity tileentity = world.getTileEntity(pos);
-		if(tileentity == null || player.isSneaking()){
+		if (tileentity == null || player.isSneaking()) {
 			return false;
 		}
 		player.openGui(Forgery.instance, Guis.FORGERY_FURNACE, world, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
-	
+
 	@Override
 	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighbor) {
 		TileEntityForgeryFurnace.loadHeater(world, pos);
+	}
+
+	@Override
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+		TileEntityForgeryFurnace tileentity = (TileEntityForgeryFurnace) world.getTileEntity(pos);
+		if (tileentity != null) {
+			for (int i = 0; i < tileentity.inventory.length; i++) {
+				if (tileentity.inventory[i] == null)
+					continue;
+				world.spawnEntityInWorld(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), tileentity.inventory[i]));
+			}
+		}
+		super.breakBlock(world, pos, state);
 	}
 }

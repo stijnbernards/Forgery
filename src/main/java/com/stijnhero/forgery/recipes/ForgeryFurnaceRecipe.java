@@ -16,6 +16,7 @@ public class ForgeryFurnaceRecipe {
 	}
 	
 	public static ForgeryFurnaceRecipe getRecipe(ItemStack item){
+		if(item == null) return null;
 		for(int i = 0; i < recipes.size(); i++){
 			if(recipes.get(i).item.isItemEqual(item)){
 				return recipes.get(i);

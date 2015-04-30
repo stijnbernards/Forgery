@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
-import com.stijnhero.forgery.client.gui.container.GuiHandler;
+import com.stijnhero.forgery.client.gui.GuiHandler;
 import com.stijnhero.forgery.proxy.Proxy;
 import com.stijnhero.forgery.recipes.ForgeryFurnaceRecipe;
 
@@ -42,7 +42,7 @@ public class Forgery
 			return Items.iron_ingot;
 		}
 	};
-	
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event){		
 		ForgeryConfiguration.init(new File(event.getModConfigurationDirectory(), "Forgery.cfg"));
@@ -58,13 +58,13 @@ public class Forgery
 		ForgeryItems.RegisterItemsInPre();
 		
 		ForgeryFurnaceRecipe.addRecipe(new ForgeryFurnaceRecipe(new ItemStack(ForgeryBlocks.OreCopper), ForgeryFluids.LiquidCopper, 50, 100, 40));
-		ForgeryFurnaceRecipe.addRecipe(new ForgeryFurnaceRecipe(new ItemStack(ForgeryBlocks.OreTin), ForgeryFluids.LiquidCopper, 80, 100, 60));
+		ForgeryFurnaceRecipe.addRecipe(new ForgeryFurnaceRecipe(new ItemStack(ForgeryBlocks.OreTin), ForgeryFluids.LiquidTin, 80, 100, 60));
 	}
 	
     @EventHandler
     public void load(FMLInitializationEvent event){
     	NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
-    	
+
     	if(event.getSide() == Side.CLIENT)
     	{
     	    ForgeryItems.RegisterItemModels();
