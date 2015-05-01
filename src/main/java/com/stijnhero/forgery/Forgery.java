@@ -69,6 +69,7 @@ public class Forgery {
 		if (event.getSide() == Side.CLIENT) {
 			ForgeryItems.RegisterItemModels();
 			ForgeryBlocks.RegisterItemBlockModels();
+			ForgeryFluids.RegisterFluidIcons();
 		}
 	}
 
