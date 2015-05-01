@@ -1,9 +1,9 @@
 {
     "variants": {
-        "normal": { "model": "forgery:heater" },
-        "facing=north": { "model": "forgery:heater" },
-        "facing=south": { "model": "forgery:heater", "y": 180 },
-        "facing=west":  { "model": "forgery:heater", "y": 270 },
-        "facing=east":  { "model": "forgery:heater", "y": 90 }
+        "normal": { "model": "forgery:clayheater" },
+        "facing=north": { "model": "forgery:clayheater" },
+        "facing=south": { "model": "forgery:clayheater", "y": 180 },
+        "facing=west":  { "model": "forgery:clayheater", "y": 270 },
+        "facing=east":  { "model": "forgery:clayheater", "y": 90 }
     }
 }

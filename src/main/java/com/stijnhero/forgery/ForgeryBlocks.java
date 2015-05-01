@@ -14,6 +14,7 @@ import com.stijnhero.forgery.common.block.BlockForgeryFurnace;
 import com.stijnhero.forgery.common.block.BlockHeater;
 import com.stijnhero.forgery.common.block.BlockLiquidOre;
 import com.stijnhero.forgery.common.block.BlockOre;
+import com.stijnhero.forgery.common.block.BlockWhetStone;
 import com.stijnhero.forgery.common.tileentity.TileEntityFluidChannel;
 import com.stijnhero.forgery.common.tileentity.TileEntityForgeryFurnace;
 import com.stijnhero.forgery.common.tileentity.TileEntityHeater;
@@ -24,11 +25,13 @@ public class ForgeryBlocks {
 	public static Block OreCopper;
 	public static Block OreTin;
 	public static Block ClayHeater;
+	public static Block ClayHeaterLit;
 	public static Block BronzeHeater;
 	public static Block LiquidCopper;
 	public static Block ForgeryFurnace;
 	public static Block LiquidCopperBlock;
 	public static Block FluidChannel;
+	public static Block WhetStone;
 	
 	//For testing purposes
 	public static Block FluidChannelTest; 
@@ -41,10 +44,12 @@ public class ForgeryBlocks {
 	}
 	
 	public static void Init(){
+		WhetStone = new BlockWhetStone(Material.wood).setUnlocalizedName("whetstone");
 		LiquidCopperBlock = new BlockLiquidOre(ForgeryFluids.LiquidCopper, Material.lava).setUnlocalizedName("liquidcopper");
 		OreCopper = new BlockOre(Material.rock, 1).setHardness(3.0F).setUnlocalizedName("orecopper");
 		OreTin = new BlockOre(Material.rock, 1).setHardness(3.0F).setUnlocalizedName("oretin");
 		ClayHeater = new BlockHeater(Material.rock, 100, 100).setHardness(3.0F).setUnlocalizedName("clayheater");
+		ClayHeaterLit = new BlockHeater(Material.rock, 100, 100).setHardness(3.0F).setLightLevel(3).setUnlocalizedName("clayheaterlit");
 		BronzeHeater = new BlockHeater(Material.rock, 500, 500).setHardness(3.0F).setUnlocalizedName("bronzeheater");
 		ForgeryFurnace = new BlockForgeryFurnace(Material.rock).setHardness(3.0F).setUnlocalizedName("forgery_furnace");
 		FluidChannel = new BlockFluidChannel(false).setHardness(3.0F).setUnlocalizedName("fluidchannel");
@@ -53,9 +58,11 @@ public class ForgeryBlocks {
 	}
 	
 	public static void RegisterBlocksInPre(){
+		GameRegistry.registerBlock(ForgeryBlocks.WhetStone, "whetstone");
 		GameRegistry.registerBlock(ForgeryBlocks.OreCopper, "orecopper");
 		GameRegistry.registerBlock(ForgeryBlocks.OreTin, "oretin");
 		GameRegistry.registerBlock(ForgeryBlocks.ClayHeater, "clayheater");
+		GameRegistry.registerBlock(ForgeryBlocks.ClayHeaterLit, "clayheaterlit");
 		GameRegistry.registerBlock(ForgeryBlocks.ForgeryFurnace, "furnace");
 		GameRegistry.registerBlock(ForgeryBlocks.BronzeHeater, "bronzeheater");
 		GameRegistry.registerBlock(ForgeryBlocks.LiquidCopperBlock, "liquidcopper");
@@ -64,6 +71,7 @@ public class ForgeryBlocks {
 		GameRegistry.registerBlock(ForgeryBlocks.FluidChannelTest, "fluidchanneltest");
 		
 		GameRegistry.registerTileEntity(TileEntityHeater.class, "forgery.clayheater");
+		GameRegistry.registerTileEntity(TileEntityHeater.class, "forgery.clayheaterlit");
 		GameRegistry.registerTileEntity(TileEntityForgeryFurnace.class, "forgery.furnace");
 		GameRegistry.registerTileEntity(TileEntityHeater.class, "forgery.bronzeheater");
 		GameRegistry.registerTileEntity(TileEntityFluidChannel.class, "forgery.fluidchannel");
@@ -78,5 +86,7 @@ public class ForgeryBlocks {
 		RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 		renderItem.getItemModelMesher().register(Item.getItemFromBlock(OreCopper), 0, new ModelResourceLocation("forgery:orecopper", "inventory"));
 		renderItem.getItemModelMesher().register(Item.getItemFromBlock(OreTin), 0, new ModelResourceLocation("forgery:oretin", "inventory"));
-    }
+		renderItem.getItemModelMesher().register(Item.getItemFromBlock(ClayHeater), 0, new ModelResourceLocation("forgery:clayheater", "inventory"));
+		renderItem.getItemModelMesher().register(Item.getItemFromBlock(ClayHeaterLit), 0, new ModelResourceLocation("forgery:clayheaterlit", "inventory"));
+	}
 }

@@ -1,5 +1,5 @@
 {
-	"parent": "block/orecopper",
+	"parent": "forgery:block/orecopper",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170 ],

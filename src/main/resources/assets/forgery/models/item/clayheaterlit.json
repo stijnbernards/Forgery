@@ -1,5 +1,5 @@
 {
-    "parent": "forgery:block/clayheater",
+    "parent": "forgery:block/clayheaterlit",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

@@ -71,8 +71,4 @@ public class TileEntityHeater extends TileEntity implements IUpdatePlayerListBox
 	public double getMaxHeat() {
 		return MaxHeat;
 	}
-
-	public int getRenderType() {
-		return 3;
-	}
 }

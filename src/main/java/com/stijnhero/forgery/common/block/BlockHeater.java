@@ -68,8 +68,8 @@ public class BlockHeater extends BlockContainer {
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 
 		if (active) {
-			worldIn.setBlockState(pos, ForgeryBlocks.ClayHeater.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
-			worldIn.setBlockState(pos, ForgeryBlocks.ClayHeater.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
+			worldIn.setBlockState(pos, ForgeryBlocks.ClayHeaterLit.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
+			worldIn.setBlockState(pos, ForgeryBlocks.ClayHeaterLit.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
 		} else {
 			worldIn.setBlockState(pos, ForgeryBlocks.ClayHeater.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
 			worldIn.setBlockState(pos, ForgeryBlocks.ClayHeater.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
@@ -190,6 +190,8 @@ public class BlockHeater extends BlockContainer {
 			stack.stackSize--;
 			tile.SetInventoryStack();
 		}
+		EnumFacing enumfacing = (EnumFacing) state.getValue(FACING);
+		System.out.println(enumfacing);
 
 		return true;
 	}
@@ -201,6 +203,11 @@ public class BlockHeater extends BlockContainer {
 	public boolean renderAsNormalBlock() {
 		return false;
 	}
+	
+    public int getRenderType()
+    {
+        return 3;
+    }
 
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		TileEntityHeater tile = (TileEntityHeater) worldIn.getTileEntity(pos);

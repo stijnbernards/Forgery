@@ -1,5 +1,5 @@
 {
-	"parent": "block/oretin",
+	"parent": "forgery:block/oretin",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170 ],

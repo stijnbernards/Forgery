@@ -1,0 +1,9 @@
+{
+    "variants": {
+        "normal": { "model": "forgery:clayheaterlit" },
+        "facing=north": { "model": "forgery:clayheaterlit" },
+        "facing=south": { "model": "forgery:clayheaterlit", "y": 180 },
+        "facing=west":  { "model": "forgery:clayheaterlit", "y": 270 },
+        "facing=east":  { "model": "forgery:clayheaterlit", "y": 90 }
+    }
+}

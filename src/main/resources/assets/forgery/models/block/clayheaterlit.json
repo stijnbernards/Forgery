@@ -2,7 +2,7 @@
     "parent": "block/orientable",
     "textures": {
         "top": "forgery:blocks/clay_heater_top",
-        "front": "forgery:blocks/clay_heater_front",
+        "front": "forgery:blocks/clay_heater_active",
         "side": "forgery:blocks/clay_heater_side"
     }
 }
