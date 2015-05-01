@@ -19,10 +19,12 @@ import com.stijnhero.forgery.common.block.BlockForgeryFurnace;
 
 public class TileEntityWhetstoneRenderer extends TileEntitySpecialRenderer {
     private final ModelWhetstoneBase model1;
+    private final ModelForgeryFurnace model2;
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
     
     public TileEntityWhetstoneRenderer() {
             this.model1 = new ModelWhetstoneBase();
+            this.model2 = new ModelForgeryFurnace();
     }
 
 	@Override
@@ -33,11 +35,21 @@ public class TileEntityWhetstoneRenderer extends TileEntitySpecialRenderer {
 		
         GL11.glPushMatrix();
         GL11.glTranslatef((float) posX + 0.5F, (float) posY + 1.5F, (float) posZ + 0.5F);
-		ResourceLocation textures = (new ResourceLocation("Texture")); 
-        Minecraft.getMinecraft().renderEngine.bindTexture(textures);                       
+		ResourceLocation texture1 = (new ResourceLocation("Texture")); 
+        Minecraft.getMinecraft().renderEngine.bindTexture(texture1);                       
         GL11.glPushMatrix();
         GL11.glRotatef(180F, getRotationFromFacing(facing), 0.0F, 1.0F);
         this.model1.render((Entity)null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
+        GL11.glPopMatrix();
+        GL11.glPopMatrix();
+        
+        GL11.glPushMatrix();
+        GL11.glTranslatef((float) posX + 0.5F, (float) posY + 1.5F, (float) posZ + 0.5F);
+        ResourceLocation texture2 = (new ResourceLocation("Texture")); 
+        Minecraft.getMinecraft().renderEngine.bindTexture(texture2);                       
+        GL11.glPushMatrix();
+        GL11.glRotatef(180F, 20F, 0.0F, 1.0F);
+        this.model2.render((Entity)null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
         GL11.glPopMatrix();
         GL11.glPopMatrix();
 	}
