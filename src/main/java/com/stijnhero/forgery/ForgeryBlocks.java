@@ -17,7 +17,8 @@ import com.stijnhero.forgery.common.block.BlockOre;
 import com.stijnhero.forgery.common.block.BlockWhetStone;
 import com.stijnhero.forgery.common.tileentity.TileEntityFluidChannel;
 import com.stijnhero.forgery.common.tileentity.TileEntityForgeryFurnace;
-import com.stijnhero.forgery.common.tileentity.TileEntityHeater;
+import com.stijnhero.forgery.common.tileentity.heater.TileEntityBronzeHeater;
+import com.stijnhero.forgery.common.tileentity.heater.TileEntityClayHeater;
 import com.stijnhero.forgery.common.worldgen.WorldGen;
 
 public class ForgeryBlocks {
@@ -27,6 +28,7 @@ public class ForgeryBlocks {
 	public static Block ClayHeater;
 	public static Block ClayHeaterLit;
 	public static Block BronzeHeater;
+	public static Block BronzeHeaterLit;
 	public static Block LiquidCopper;
 	public static Block ForgeryFurnace;
 	public static Block LiquidCopperBlock;
@@ -48,9 +50,11 @@ public class ForgeryBlocks {
 		LiquidCopperBlock = new BlockLiquidOre(ForgeryFluids.LiquidCopper, Material.lava).setUnlocalizedName("liquidcopper");
 		OreCopper = new BlockOre(Material.rock, 1).setHardness(3.0F).setUnlocalizedName("orecopper");
 		OreTin = new BlockOre(Material.rock, 1).setHardness(3.0F).setUnlocalizedName("oretin");
-		ClayHeater = new BlockHeater(Material.rock, 100, 100).setHardness(3.0F).setUnlocalizedName("clayheater");
-		ClayHeaterLit = new BlockHeater(Material.rock, 100, 100).setHardness(3.0F).setLightLevel(3).setUnlocalizedName("clayheaterlit");
-		BronzeHeater = new BlockHeater(Material.rock, 500, 500).setHardness(3.0F).setUnlocalizedName("bronzeheater");
+		ClayHeaterLit = new BlockHeater(Material.rock, false).setHardness(3.0F).setLightLevel(3).setUnlocalizedName("clayheaterlit");
+		ClayHeater = new BlockHeater(Material.rock, true).setHardness(3.0F).setUnlocalizedName("clayheater");
+		BronzeHeaterLit = new BlockHeater(Material.rock, true).setHardness(3.0F).setLightLevel(3).setUnlocalizedName("bronzeheaterlit");
+		BronzeHeater = new BlockHeater(Material.rock, true).setHardness(3.0F).setUnlocalizedName("bronzeheater");
+
 		ForgeryFurnace = new BlockForgeryFurnace(Material.rock).setHardness(3.0F).setUnlocalizedName("forgery_furnace");
 		FluidChannel = new BlockFluidChannel(false).setHardness(3.0F).setUnlocalizedName("fluidchannel");
 
@@ -65,15 +69,17 @@ public class ForgeryBlocks {
 		GameRegistry.registerBlock(ForgeryBlocks.ClayHeaterLit, "clayheaterlit");
 		GameRegistry.registerBlock(ForgeryBlocks.ForgeryFurnace, "furnace");
 		GameRegistry.registerBlock(ForgeryBlocks.BronzeHeater, "bronzeheater");
+		GameRegistry.registerBlock(ForgeryBlocks.BronzeHeaterLit, "bronzeheaterlit");
 		GameRegistry.registerBlock(ForgeryBlocks.LiquidCopperBlock, "liquidcopper");
 		GameRegistry.registerBlock(ForgeryBlocks.FluidChannel, "fluidchannel");
 		
 		GameRegistry.registerBlock(ForgeryBlocks.FluidChannelTest, "fluidchanneltest");
 		
-		GameRegistry.registerTileEntity(TileEntityHeater.class, "forgery.clayheater");
-		GameRegistry.registerTileEntity(TileEntityHeater.class, "forgery.clayheaterlit");
+		GameRegistry.registerTileEntity(TileEntityClayHeater.class, "forgery.clayheater");
+		GameRegistry.registerTileEntity(TileEntityClayHeater.class, "forgery.clayheaterlit");
 		GameRegistry.registerTileEntity(TileEntityForgeryFurnace.class, "forgery.furnace");
-		GameRegistry.registerTileEntity(TileEntityHeater.class, "forgery.bronzeheater");
+		GameRegistry.registerTileEntity(TileEntityBronzeHeater.class, "forgery.bronzeheater");
+		GameRegistry.registerTileEntity(TileEntityBronzeHeater.class, "forgery.bronzeheaterlit");
 		GameRegistry.registerTileEntity(TileEntityFluidChannel.class, "forgery.fluidchannel");
 	}
 	

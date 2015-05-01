@@ -26,7 +26,7 @@ import com.stijnhero.forgery.Forgery;
 import com.stijnhero.forgery.ForgeryBlocks;
 import com.stijnhero.forgery.client.gui.Guis;
 import com.stijnhero.forgery.common.tileentity.TileEntityForgeryFurnace;
-import com.stijnhero.forgery.common.tileentity.TileEntityHeater;
+import com.stijnhero.forgery.common.tileentity.heater.TileEntityHeater;
 
 public class BlockForgeryFurnace extends BlockContainer {
 
@@ -55,6 +55,7 @@ public class BlockForgeryFurnace extends BlockContainer {
 	@Override
 	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighbor) {
 		TileEntityForgeryFurnace.loadHeater(world, pos);
+		world.markBlockForUpdate(pos);
 	}
 
 	@Override

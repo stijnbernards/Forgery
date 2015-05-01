@@ -25,6 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.stijnhero.forgery.common.block.BlockForgeryFurnace;
+import com.stijnhero.forgery.common.tileentity.heater.TileEntityHeater;
 import com.stijnhero.forgery.recipes.ForgeryFurnaceRecipe;
 
 public class TileEntityForgeryFurnace extends TileEntityForgery implements IFluidHandler, IUpdatePlayerListBox {
@@ -73,7 +74,6 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 		this.heater = heater;
 	}
 
-	boolean f = true;
 	int ticks = 0;
 
 	@Override
@@ -84,10 +84,7 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 		}
 		ticks++;
 
-		if (this.heater == null) {
-			f = false;
-			loadHeater(this.worldObj, this.pos);
-		}
+		loadHeater(this.worldObj, this.pos);
 
 		if (this.heater != null) {
 			this.heat = this.heater.getHeat();
@@ -205,15 +202,11 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 	@Override
 	public FluidTankInfo[] getTankInfo(EnumFacing from) {
 		return null;
-		// if(this.tanks.size() <= 0) return null;
-		// return new FluidTankInfo[] { this.tanks.get(0).getInfo() };
 	}
 
 	@Override
 	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
 		return null;
-		// if(this.tanks.size() <= 0) return null;
-		// return this.tanks.get(0).drain(maxDrain, doDrain);
 	}
 
 	@Override

@@ -31,6 +31,13 @@ public class ForgeryFurnaceRecipe {
 	public int amount;
 	public int duration;
 	
+	/**
+	 * @param item 
+	 * @param fluid Result
+	 * @param heat Min required heat
+	 * @param amount Output fluid
+	 * @param duration Time to craft
+	 */
 	public ForgeryFurnaceRecipe(ItemStack item, Fluid fluid, double heat, int amount, int duration){
 		this.item = item;
 		this.fluid = fluid;

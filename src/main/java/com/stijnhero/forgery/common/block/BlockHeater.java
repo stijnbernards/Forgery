@@ -23,24 +23,22 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.stijnhero.forgery.Forgery;
-import com.stijnhero.forgery.ForgeryBlocks;
-import com.stijnhero.forgery.common.tileentity.TileEntityHeater;
+import com.stijnhero.forgery.common.tileentity.heater.TileEntityBronzeHeater;
+import com.stijnhero.forgery.common.tileentity.heater.TileEntityClayHeater;
+import com.stijnhero.forgery.common.tileentity.heater.TileEntityHeater;
 
 public class BlockHeater extends BlockContainer {
 
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-	private double Multiplier;
-	private double maxHeat;
-
-	public BlockHeater(Material materialIn, double multiplier, double max) {
+	
+	public BlockHeater(Material materialIn, boolean inventory) {
 		super(materialIn);
-		// this.setDefaultState(this.blockState.getBaseState().withProperty(FACING,
-		// EnumFacing.NORTH));
-		this.Multiplier = multiplier;
-		this.maxHeat = max;
-		this.setCreativeTab(Forgery.Forgery);
+//		 this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+		if (inventory) {
+			this.setCreativeTab(Forgery.Forgery);
+		}
 	}
-
+	
 	private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state) {
 		if (!worldIn.isRemote) {
 			Block block = worldIn.getBlockState(pos.north()).getBlock();
@@ -63,16 +61,16 @@ public class BlockHeater extends BlockContainer {
 		}
 	}
 
-	public static void setState(boolean active, World worldIn, BlockPos pos) {
+	public static void setState(boolean active, World worldIn, BlockPos pos, Block normal_block, Block active_block) {
 		IBlockState iblockstate = worldIn.getBlockState(pos);
 		TileEntity tileentity = worldIn.getTileEntity(pos);
-
+		
 		if (active) {
-			worldIn.setBlockState(pos, ForgeryBlocks.ClayHeaterLit.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
-			worldIn.setBlockState(pos, ForgeryBlocks.ClayHeaterLit.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
+			worldIn.setBlockState(pos, active_block.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
+			worldIn.setBlockState(pos, active_block.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
 		} else {
-			worldIn.setBlockState(pos, ForgeryBlocks.ClayHeater.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
-			worldIn.setBlockState(pos, ForgeryBlocks.ClayHeater.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
+			worldIn.setBlockState(pos, normal_block.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
+			worldIn.setBlockState(pos, normal_block.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
 		}
 
 		if (tileentity != null) {
@@ -115,7 +113,7 @@ public class BlockHeater extends BlockContainer {
 	@SideOnly(Side.CLIENT)
 	public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
 		TileEntityHeater tile = (TileEntityHeater) worldIn.getTileEntity(pos);
-
+		if(tile == null) return;
 		if (tile.isBurning()) {
 			EnumFacing enumfacing = (EnumFacing) state.getValue(FACING);
 			double d0 = (double) pos.getX() + 0.5D;
@@ -178,7 +176,14 @@ public class BlockHeater extends BlockContainer {
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
-		return new TileEntityHeater(Multiplier, maxHeat);
+		String name = this.getUnlocalizedName();
+		if(name.equals("tile.clayheater") || name.equals("tile.clayheaterlit")){
+			return new TileEntityClayHeater();
+		}
+		if(name.equals("tile.bronzeheater") || name.equals("tile.bronzeheaterlit")){
+			return new TileEntityBronzeHeater();
+		}
+		return null;
 	}
 
 	@Override
@@ -186,12 +191,14 @@ public class BlockHeater extends BlockContainer {
 		ItemStack stack = playerIn.getCurrentEquippedItem();
 		TileEntityHeater tile = (TileEntityHeater) worldIn.getTileEntity(pos);
 
-		if (stack != null && stack.getItem() == Items.coal) {
-			stack.stackSize--;
-			tile.SetInventoryStack();
+		if (!worldIn.isRemote) {
+			if (stack != null && stack.getItem() == Items.coal) {
+				stack.stackSize--;
+				tile.SetInventoryStack();
+			}
 		}
-		EnumFacing enumfacing = (EnumFacing) state.getValue(FACING);
-		System.out.println(enumfacing);
+		// EnumFacing enumfacing = (EnumFacing) state.getValue(FACING);
+		System.out.println(tile.getCoal() + " HEAT: " + tile.getHeat() + "/" + tile.getMaxHeat());
 
 		return true;
 	}
@@ -203,11 +210,10 @@ public class BlockHeater extends BlockContainer {
 	public boolean renderAsNormalBlock() {
 		return false;
 	}
-	
-    public int getRenderType()
-    {
-        return 3;
-    }
+
+	public int getRenderType() {
+		return 3;
+	}
 
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		TileEntityHeater tile = (TileEntityHeater) worldIn.getTileEntity(pos);
