@@ -38,6 +38,7 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 	private double max_heat = 0.0;
 	public int temperature = 0;
 	public int[] durations = new int[9];
+	private boolean busy = false;
 
 	public TileEntityForgeryFurnace() {
 		this.inventory = new ItemStack[9];
@@ -83,27 +84,29 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 		}
 		ticks++;
 
-		if (!this.worldObj.isRemote) {
-			if (this.heater == null && f) {
-				f = false;
-				loadHeater(this.worldObj, this.pos);
-			}
-			if (this.heater != null) {
-				this.heat = this.heater.getHeat();
-				this.max_heat = this.heater.getMaxHeat();
-			} else {
-				this.heat = 0;
-				this.max_heat = 0;
-				this.temperature = 0;
-			}
-
-			if (this.heat > this.max_heat) {
-				this.heat = this.max_heat;
-			}
+		if (this.heater == null) {
+			f = false;
+			loadHeater(this.worldObj, this.pos);
 		}
 
 		if (this.heater != null) {
-			this.temperature = (int) (this.heat / (this.max_heat / 100));
+			this.heat = this.heater.getHeat();
+			this.max_heat = this.heater.getMaxHeat();
+		} else {
+			this.heat = 0;
+			this.max_heat = 0;
+			this.temperature = 0;
+			this.busy = false;
+		}
+
+		if (this.heat > this.max_heat) {
+			this.heat = this.max_heat;
+		}
+
+		if (this.heater != null) {
+			if (!this.worldObj.isRemote) {
+				this.temperature = (int) (this.heat / (this.max_heat / 100));
+			}
 			this.handleCrafting();
 		}
 	}
@@ -123,12 +126,14 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 							}
 						} else {
 							this.durations[i]++;
+							this.busy = true;
 						}
 					}
 					continue;
 				}
 			}
 			this.durations[i] = 0;
+			this.busy = false;
 		}
 	}
 
@@ -305,6 +310,10 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 		super.writeSyncableDataToNBT(syncData);
 	}
 
+	public boolean isBusy() {
+		return this.busy;
+	}
+
 	private void outputFluids() {
 		BlockForgeryFurnace block = (BlockForgeryFurnace) this.worldObj.getBlockState(pos).getBlock();
 		IBlockState state = this.worldObj.getBlockState(pos);
@@ -318,6 +327,8 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 
 				TileEntity te = this.worldObj.getTileEntity(this.pos.offset(fluids));
 				if (te != null && te instanceof IFluidHandler) {
+					if (te.getWorld() == null)
+						return;
 					IFluidHandler f = (IFluidHandler) te;
 					if (f.canFill(fluids.getOpposite(), fluid.getFluid())) {
 						if (f.getTankInfo(fluids.getOpposite())[0].fluid == null) {

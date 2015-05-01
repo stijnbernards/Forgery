@@ -2,13 +2,8 @@ package com.stijnhero.forgery.common.block;
 
 import java.util.Random;
 
-import com.stijnhero.forgery.Forgery;
-import com.stijnhero.forgery.ForgeryBlocks;
-import com.stijnhero.forgery.common.tileentity.TileEntityHeater;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
@@ -17,18 +12,19 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.stijnhero.forgery.Forgery;
+import com.stijnhero.forgery.ForgeryBlocks;
+import com.stijnhero.forgery.common.tileentity.TileEntityHeater;
 
 public class BlockHeater extends BlockContainer {
 

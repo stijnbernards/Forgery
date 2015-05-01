@@ -5,6 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -15,7 +16,7 @@ public class ContainerForgeryFurnace extends Container {
 	public TileEntityForgeryFurnace tileentity;
 	private int temperature = 0;
 	private int durations[] = new int[9];
-	
+
 	public ContainerForgeryFurnace(TileEntityForgeryFurnace tileentity, InventoryPlayer inventory_player) {
 		this.tileentity = tileentity;
 		for (int i = 0; i < 9; i++) {
@@ -41,8 +42,8 @@ public class ContainerForgeryFurnace extends Container {
 	@Override
 	public void addCraftingToCrafters(ICrafting listener) {
 		super.addCraftingToCrafters(listener);
-		listener.sendProgressBarUpdate(this, 0, (int)this.tileentity.temperature);
-		for(int i = 0; i < 9; i++){
+		listener.sendProgressBarUpdate(this, 0, (int) this.tileentity.temperature);
+		for (int i = 0; i < 9; i++) {
 			listener.sendProgressBarUpdate(this, i + 1, this.tileentity.durations[i]);
 		}
 	}
@@ -52,27 +53,57 @@ public class ContainerForgeryFurnace extends Container {
 		super.detectAndSendChanges();
 		for (int i = 0; i < this.crafters.size(); i++) {
 			ICrafting crafting = (ICrafting) this.crafters.get(i);
-			if(this.temperature != this.tileentity.temperature){
+			if (this.temperature != this.tileentity.temperature) {
 				crafting.sendProgressBarUpdate(this, 0, this.tileentity.temperature);
 			}
-			for(int j = 0; j < 9; j++){
+			for (int j = 0; j < 9; j++) {
 				crafting.sendProgressBarUpdate(this, j + 1, this.tileentity.durations[j]);
 			}
 		}
 		this.temperature = this.tileentity.temperature;
-		for(int i = 0; i < 9; i++){
+		for (int i = 0; i < 9; i++) {
 			this.durations[i] = this.tileentity.durations[i];
 		}
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void updateProgressBar(int id, int data) {
-		if(id == 0){
+		if (id == 0) {
 			this.tileentity.temperature = data;
 		}
-		if(id >= 1 && id <= 9){
+		if (id >= 1 && id <= 9) {
 			this.tileentity.durations[id - 1] = data;
 		}
+	}
+
+	@Override
+	public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
+		ItemStack stack = null;
+		Slot slotObject = (Slot) inventorySlots.get(slot);
+
+		if (slotObject != null && slotObject.getHasStack()) {
+			ItemStack stackInSlot = slotObject.getStack();
+			stack = stackInSlot.copy();
+			if (slot < tileentity.getSizeInventory()) {
+				if (!this.mergeItemStack(stackInSlot, tileentity.getSizeInventory(), 36 + tileentity.getSizeInventory(), true)) {
+					return null;
+				}
+			} else if (!this.mergeItemStack(stackInSlot, 0, tileentity.getSizeInventory(), false)) {
+				return null;
+			}
+
+			if (stackInSlot.stackSize == 0) {
+				slotObject.putStack(null);
+			} else {
+				slotObject.onSlotChanged();
+			}
+
+			if (stackInSlot.stackSize == stack.stackSize) {
+				return null;
+			}
+			slotObject.onPickupFromSlot(player, stackInSlot);
+		}
+		return stack;
 	}
 }

@@ -8,22 +8,21 @@ import net.minecraft.tileentity.TileEntity;
 
 import com.stijnhero.forgery.common.block.BlockHeater;
 
-public class TileEntityHeater extends TileEntity implements IUpdatePlayerListBox{
+public class TileEntityHeater extends TileEntity implements IUpdatePlayerListBox {
 
 	double CoalAmount = 0.0;
 	boolean IsBurning;
 	double Multiplier;
 	double MaxHeat = 0.0;
 	double Heat = 0.0;
-	
-	
+
 	public TileEntityHeater(double multi, double max) {
 		this.Multiplier = multi;
 		this.MaxHeat = max;
 	}
-	
+
 	@Override
-	public void writeToNBT(NBTTagCompound compound){
+	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		compound.setDouble("CoalAmount", CoalAmount);
 		compound.setDouble("Heat", Heat);
@@ -35,46 +34,45 @@ public class TileEntityHeater extends TileEntity implements IUpdatePlayerListBox
 		this.CoalAmount = compound.getDouble("CoalAmount");
 		this.Heat = compound.getDouble("Heat");
 	}
-	
-	public void SetInventoryStack(){
+
+	public void SetInventoryStack() {
 		CoalAmount += Multiplier;
 	}
-	
-	public void update(){
-		if(CoalAmount > 0){
+
+	public void update() {
+		if (CoalAmount > 0) {
 			CoalAmount--;
 			IsBurning = true;
-			
-			if(Heat < MaxHeat)
+
+			if (Heat < MaxHeat)
 				Heat++;
-		}else{
+		} else {
 			IsBurning = false;
-			
-			if(Heat > 0)
+
+			if (Heat > 0)
 				Heat--;
 		}
-		
+
 		BlockHeater.setState(IsBurning, this.worldObj, this.pos);
 	}
-	
-	public boolean isBurning(){
+
+	public boolean isBurning() {
 		return this.IsBurning;
 	}
-	
-	public int getCoal(){
+
+	public int getCoal() {
 		return (int) Math.floor(CoalAmount / Multiplier);
 	}
-	
-	public double getHeat(){
+
+	public double getHeat() {
 		return Heat;
 	}
-	
-	public double getMaxHeat(){
+
+	public double getMaxHeat() {
 		return MaxHeat;
 	}
-	
-	public int getRenderType()
-    {
-        return 3;
-    }
+
+	public int getRenderType() {
+		return 3;
+	}
 }

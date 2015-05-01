@@ -29,6 +29,9 @@ public class TileEntityFluidChannel extends TileEntity implements IFluidHandler,
 	public int ticks = 0;
 	public int recentlyFilledDelay;
 
+	public TileEntityFluidChannel() {
+	}
+
 	public TileEntityFluidChannel(boolean test) {
 		lastProvider = null;
 		validOutputs.add(EnumFacing.DOWN);
@@ -113,6 +116,8 @@ public class TileEntityFluidChannel extends TileEntity implements IFluidHandler,
 
 	@Override
 	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
+		if (resource == null)
+			return 0;
 		if (doFill) {
 			markDirtyForRendering();
 			this.lastProvider = from;
@@ -121,7 +126,9 @@ public class TileEntityFluidChannel extends TileEntity implements IFluidHandler,
 		if (from == EnumFacing.UP) {
 			return this.internalTank.fill(resource, doFill);
 		} else if (from == EnumFacing.NORTH || from == EnumFacing.SOUTH || from == EnumFacing.WEST || from == EnumFacing.EAST) {
-			return this.subTanks.get(from).fill(resource, doFill);
+			if (this.subTanks.get(from) != null) {
+				return this.subTanks.get(from).fill(resource, doFill);
+			}
 		}
 		return 0;
 	}
@@ -345,6 +352,8 @@ public class TileEntityFluidChannel extends TileEntity implements IFluidHandler,
 	}
 
 	public int convertEFToInt(EnumFacing dir) {
+		if (dir == null)
+			return -1;
 		switch (dir) {
 		case DOWN:
 			return 0;

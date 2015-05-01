@@ -115,4 +115,24 @@ public abstract class TileEntityForgery extends TileEntity implements IInventory
 	protected void readSyncableDataFromNBT(NBTTagCompound nbtCompound) {
 		
 	}
+	
+	@Override
+	public int getInventoryStackLimit() {
+		return 0;
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer player) {
+		return false;
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack) {
+		return false;
+	}
+
+	@Override
+	public String getName() {
+		return null;
+	}
 }
