@@ -40,6 +40,10 @@ public class TileEntityHeater extends TileEntity implements IUpdatePlayerListBox
 	public void SetInventoryStack() {
 		CoalAmount += Multiplier;
 	}
+	
+	public Block getDefaultBlock(){
+		return this.normal_block;
+	}
 
 	public void update() {
 		if (CoalAmount > 0) {

@@ -13,11 +13,13 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -30,15 +32,35 @@ import com.stijnhero.forgery.common.tileentity.heater.TileEntityHeater;
 public class BlockHeater extends BlockContainer {
 
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-	
-	public BlockHeater(Material materialIn, boolean inventory) {
+	private Block dropped;
+
+	public BlockHeater(Material materialIn, boolean inventory, Block dropped) {
 		super(materialIn);
-//		 this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+		this.dropped = dropped;
+		if (this.dropped == null) {
+			this.dropped = this;
+		}
+		// this.setDefaultState(this.blockState.getBaseState().withProperty(FACING,
+		// EnumFacing.NORTH));
 		if (inventory) {
 			this.setCreativeTab(Forgery.Forgery);
 		}
 	}
 	
+	public BlockHeater(Material materialIn, boolean inventory){
+		this(materialIn, inventory, null);
+	}
+
+	@Override
+	public ItemStack getPickBlock(MovingObjectPosition target, World world, BlockPos pos) {
+		return new ItemStack(this.dropped, 1);
+	}
+
+	@Override
+	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+		return new ItemStack(this.dropped, 1).getItem();
+	}
+
 	private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state) {
 		if (!worldIn.isRemote) {
 			Block block = worldIn.getBlockState(pos.north()).getBlock();
@@ -64,7 +86,7 @@ public class BlockHeater extends BlockContainer {
 	public static void setState(boolean active, World worldIn, BlockPos pos, Block normal_block, Block active_block) {
 		IBlockState iblockstate = worldIn.getBlockState(pos);
 		TileEntity tileentity = worldIn.getTileEntity(pos);
-		
+
 		if (active) {
 			worldIn.setBlockState(pos, active_block.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
 			worldIn.setBlockState(pos, active_block.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
@@ -113,7 +135,8 @@ public class BlockHeater extends BlockContainer {
 	@SideOnly(Side.CLIENT)
 	public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
 		TileEntityHeater tile = (TileEntityHeater) worldIn.getTileEntity(pos);
-		if(tile == null) return;
+		if (tile == null)
+			return;
 		if (tile.isBurning()) {
 			EnumFacing enumfacing = (EnumFacing) state.getValue(FACING);
 			double d0 = (double) pos.getX() + 0.5D;
@@ -177,10 +200,10 @@ public class BlockHeater extends BlockContainer {
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		String name = this.getUnlocalizedName();
-		if(name.equals("tile.clayheater") || name.equals("tile.clayheaterlit")){
+		if (name.equals("tile.clayheater") || name.equals("tile.clayheaterlit")) {
 			return new TileEntityClayHeater();
 		}
-		if(name.equals("tile.bronzeheater") || name.equals("tile.bronzeheaterlit")){
+		if (name.equals("tile.bronzeheater") || name.equals("tile.bronzeheaterlit")) {
 			return new TileEntityBronzeHeater();
 		}
 		return null;

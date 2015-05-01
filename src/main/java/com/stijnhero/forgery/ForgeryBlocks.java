@@ -20,6 +20,7 @@ import com.stijnhero.forgery.common.block.BlockOre;
 import com.stijnhero.forgery.common.block.BlockWhetStone;
 import com.stijnhero.forgery.common.tileentity.TileEntityFluidChannel;
 import com.stijnhero.forgery.common.tileentity.TileEntityForgeryFurnace;
+import com.stijnhero.forgery.common.tileentity.TileEntityWhetstone;
 import com.stijnhero.forgery.common.tileentity.heater.TileEntityBronzeHeater;
 import com.stijnhero.forgery.common.tileentity.heater.TileEntityClayHeater;
 import com.stijnhero.forgery.common.worldgen.WorldGen;
@@ -53,10 +54,10 @@ public class ForgeryBlocks {
 		LiquidCopperBlock = new BlockLiquidOre(ForgeryFluids.LiquidCopper, Material.lava).setUnlocalizedName("liquidcopper");
 		OreCopper = new BlockOre(Material.rock, 1).setHardness(3.0F).setUnlocalizedName("orecopper");
 		OreTin = new BlockOre(Material.rock, 1).setHardness(3.0F).setUnlocalizedName("oretin");
-		ClayHeaterLit = new BlockHeater(Material.rock, false).setHardness(3.0F).setLightLevel(3).setUnlocalizedName("clayheaterlit");
 		ClayHeater = new BlockHeater(Material.rock, true).setHardness(3.0F).setUnlocalizedName("clayheater");
-		BronzeHeaterLit = new BlockHeater(Material.rock, true).setHardness(3.0F).setLightLevel(3).setUnlocalizedName("bronzeheaterlit");
+		ClayHeaterLit = new BlockHeater(Material.rock, false, ClayHeater).setHardness(3.0F).setLightLevel(3).setUnlocalizedName("clayheaterlit");
 		BronzeHeater = new BlockHeater(Material.rock, true).setHardness(3.0F).setUnlocalizedName("bronzeheater");
+		BronzeHeaterLit = new BlockHeater(Material.rock, false, BronzeHeater).setHardness(3.0F).setLightLevel(3).setUnlocalizedName("bronzeheaterlit");
 
 		ForgeryFurnace = new BlockForgeryFurnace(Material.rock).setHardness(3.0F).setUnlocalizedName("forgery_furnace");
 		FluidChannel = new BlockFluidChannel(false).setHardness(3.0F).setUnlocalizedName("fluidchannel");
@@ -84,6 +85,7 @@ public class ForgeryBlocks {
 		GameRegistry.registerTileEntity(TileEntityBronzeHeater.class, "forgery.bronzeheater");
 		GameRegistry.registerTileEntity(TileEntityBronzeHeater.class, "forgery.bronzeheaterlit");
 		GameRegistry.registerTileEntity(TileEntityFluidChannel.class, "forgery.fluidchannel");
+		GameRegistry.registerTileEntity(TileEntityWhetstone.class, "forgery.whetstone");
 	}
 	
 	public static void EditBlocks(){

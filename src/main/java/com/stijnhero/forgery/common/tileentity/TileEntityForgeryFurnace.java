@@ -1,8 +1,8 @@
 package com.stijnhero.forgery.common.tileentity;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +14,7 @@ import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.Fluid;
@@ -78,6 +79,7 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 
 	@Override
 	public void update() {
+		this.chimney();
 		if (ticks == 12) {
 			this.outputFluids();
 			ticks = 0;
@@ -305,6 +307,22 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 
 	public boolean isBusy() {
 		return this.busy;
+	}
+
+	Random rand = new Random();
+
+	private void chimney() {
+		double d0 = (double) pos.getX() + 0.5D;
+		double d1 = (double) pos.getY() + rand.nextDouble() * 6.0D / 16.0D;
+		double d2 = (double) pos.getZ() + 0.5D;
+		double d3 = 0.52D;
+		double d4 = rand.nextDouble() * 0.6D - 0.3D;
+
+		for(double i = 0; i < 100; i += 0.5){
+			
+			worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 - d3, d1 + i, d2 + d4, 0.0D, 0.0D, 0.0D, new int[0]);
+		}
+		worldObj.spawnParticle(EnumParticleTypes.FLAME, d0 - d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D, new int[0]);
 	}
 
 	private void outputFluids() {

@@ -40,7 +40,7 @@ public class GuiForgeryFurnace extends GuiContainer {
 		GL11.glColor4f(1, 1, 1, 1);
 		this.mc.renderEngine.bindTexture(texture);
 
-		this.drawTexturedModalRect(5 + this.tileentity.temperature, 101, 8, 195, 5, 7);
+		this.drawTexturedModalRect(6 + this.tileentity.temperature, 101, 8, 195, 5, 7);
 
 		for (int i = 0; i < 9; i++) {
 			int c = 0;
