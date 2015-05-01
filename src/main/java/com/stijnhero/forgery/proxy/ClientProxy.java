@@ -1,11 +1,15 @@
 package com.stijnhero.forgery.proxy;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
+import com.stijnhero.forgery.ForgeryBlocks;
 import com.stijnhero.forgery.client.gui.GuiForgeryFurnace;
 import com.stijnhero.forgery.client.gui.Guis;
 import com.stijnhero.forgery.client.renderer.TileEntityForgeryFurnaceRenderer;

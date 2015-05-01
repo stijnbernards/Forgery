@@ -44,6 +44,11 @@ public class BlockWhetStone extends BlockContainer{
 		return new TileEntityWhetstone();
 	}
 	
+	@Override
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+		super.breakBlock(worldIn, pos, state);
+	}
+	
 	private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state) {
 		if (!worldIn.isRemote) {
 			Block block = worldIn.getBlockState(pos.north()).getBlock();

@@ -177,6 +177,10 @@ public class BlockForgeryFurnace extends BlockContainer {
 	public boolean isOpaqueCube() {
 		return false;
 	}
+	
+    public boolean renderAsNormalBlock() {
+        return false;
+    }
 
 	@SideOnly(Side.CLIENT)
 	public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
@@ -207,5 +211,10 @@ public class BlockForgeryFurnace extends BlockContainer {
 				worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + d4, d1, d2 + d3, 0.0D, 0.0D, 0.0D, new int[0]);
 			}
 		}
+	}
+	
+	@Override
+	public int getRenderType(){
+		return -1;
 	}
 }

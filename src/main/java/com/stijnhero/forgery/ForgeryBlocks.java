@@ -3,12 +3,15 @@ package com.stijnhero.forgery;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import com.stijnhero.forgery.client.renderer.ModelWhetstoneBase;
 import com.stijnhero.forgery.common.block.BlockFluidChannel;
 import com.stijnhero.forgery.common.block.BlockForgeryFurnace;
 import com.stijnhero.forgery.common.block.BlockHeater;
