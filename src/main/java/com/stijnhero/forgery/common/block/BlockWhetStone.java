@@ -36,7 +36,13 @@ public class BlockWhetStone extends BlockContainer{
 			float hitX, float hitY, float hitZ) {
 
 		
-		return false;
+		TileEntityWhetstone tile = (TileEntityWhetstone) worldIn.getTileEntity(pos);
+		
+		tile.left += 0.1F;
+		
+		System.out.println(tile.left);
+		
+		return true;
 	}
 
 	@Override
@@ -128,4 +134,6 @@ public class BlockWhetStone extends BlockContainer{
 		return false;
 	}
 
+	
+	
 }
