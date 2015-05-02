@@ -1,5 +1,8 @@
 Changelog:
-Build 1397:
+Build 1398:
+	Zaggy1024: Fixed a bug which caused the light level not to update when a block implements Block.getLightValue(IBlockAccess, BlockPos) to change the light value for different block states.
+
+Build 1.8-11.14.1.1397:
 	Parker Young: Fixes MC-52974: Host's skin doesn't load in LAN
 
 Build 1.8-11.14.1.1396:
