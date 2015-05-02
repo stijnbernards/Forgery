@@ -410,7 +410,7 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 			if (tes.getWorld() != null) {
 				IFluidHandler fe = (IFluidHandler) tes;
 				if (slag != null && slag.getFluidAmount() > 0) {
-					this.emptyTank(fe, slagside.getOpposite(), slag.getFluid().copy(), slag, 100);
+					this.emptyTank(fe, slagside, slag.getFluid().copy(), slag, 100);
 				}
 			}
 		}
@@ -423,7 +423,7 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 				IFluidHandler f = (IFluidHandler) te;
 				for (FluidTank tank : this.tanks.values()) {
 					if (tank != null && tank.getFluidAmount() > 0) {
-						this.emptyTank(f, fluids.getOpposite(), tank.getFluid().copy(), tank, 100);
+						this.emptyTank(f, fluids, tank.getFluid().copy(), tank, 100);
 					}
 				}
 			}

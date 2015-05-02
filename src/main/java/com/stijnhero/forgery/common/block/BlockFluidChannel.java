@@ -18,15 +18,12 @@ import net.minecraft.world.World;
 
 public class BlockFluidChannel extends BlockContainer {
 
-	private boolean test = true;
-
-	public BlockFluidChannel(boolean kek) {
+	public BlockFluidChannel() {
 		super(Material.rock);
 		this.setHardness(1F);
 		this.setResistance(10);
 		this.stepSound = soundTypeStone;
 		setCreativeTab(Forgery.Forgery);
-		this.test = kek;
 	}
 
 	@Override
@@ -76,7 +73,7 @@ public class BlockFluidChannel extends BlockContainer {
 
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {
-		return new TileEntityFluidChannel(test);
+		return new TileEntityFluidChannel();
 	}
 
 	@Override

@@ -37,10 +37,7 @@ public class ForgeryBlocks {
 	public static Block FluidChannel;
 	public static Block WhetStone;
 	public static Block Chimney;
-	
-	//For testing purposes
-	public static Block FluidChannelTest; 
-	
+		
 	public static boolean HarvestWood = true;
 	public static boolean LeavesDrop = true;
 	
@@ -61,9 +58,7 @@ public class ForgeryBlocks {
 		ForgeryFurnace = new BlockForgeryFurnace(Material.rock).setHardness(3.0F).setUnlocalizedName("forgery_furnace");
 		Chimney = new BlockChimney(Material.rock).setHardness(2.0F).setUnlocalizedName("chimney");
 		
-		FluidChannel = new BlockFluidChannel(false).setHardness(3.0F).setUnlocalizedName("fluidchannel");
-		
-		FluidChannelTest = new BlockFluidChannel(true).setHardness(3.0F).setUnlocalizedName("fluidchanneltest");
+		FluidChannel = new BlockFluidChannel().setHardness(3.0F).setUnlocalizedName("fluidchannel");
 	}
 	
 	public static void RegisterBlocksInPre(){
@@ -78,9 +73,7 @@ public class ForgeryBlocks {
 		GameRegistry.registerBlock(ForgeryBlocks.LiquidCopperBlock, "liquidcopper");
 		GameRegistry.registerBlock(ForgeryBlocks.FluidChannel, "fluidchannel");
 		GameRegistry.registerBlock(ForgeryBlocks.Chimney, "chimney");
-		
-		GameRegistry.registerBlock(ForgeryBlocks.FluidChannelTest, "fluidchanneltest");
-		
+				
 		GameRegistry.registerTileEntity(TileEntityClayHeater.class, "forgery.clayheater");
 		GameRegistry.registerTileEntity(TileEntityClayHeater.class, "forgery.clayheaterlit");
 		GameRegistry.registerTileEntity(TileEntityForgeryFurnace.class, "forgery.furnace");

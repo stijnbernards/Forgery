@@ -20,7 +20,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.common.util.EnumHelper;
 
-public class TileEntityFluidChannel extends TileEntity implements IFluidHandler, IUpdatePlayerListBox {
+public class TileEntityFluidChannel extends TileEntityForgery implements IFluidHandler, IUpdatePlayerListBox {
 
 	FluidTank internalTank = new FluidTank(1000);
 	HashMap<EnumFacing, FluidTank> subTanks = new HashMap();
@@ -30,9 +30,6 @@ public class TileEntityFluidChannel extends TileEntity implements IFluidHandler,
 	public int recentlyFilledDelay;
 
 	public TileEntityFluidChannel() {
-	}
-
-	public TileEntityFluidChannel(boolean test) {
 		lastProvider = null;
 		validOutputs.add(EnumFacing.DOWN);
 		validOutputs.add(EnumFacing.NORTH);
@@ -44,9 +41,6 @@ public class TileEntityFluidChannel extends TileEntity implements IFluidHandler,
 		subTanks.put(EnumFacing.SOUTH, new FluidTank(1000));
 		subTanks.put(EnumFacing.WEST, new FluidTank(1000));
 		subTanks.put(EnumFacing.EAST, new FluidTank(1000));
-
-		if (test)
-			this.internalTank.fill(new FluidStack(ForgeryFluids.LiquidCopper, 1), true);
 	}
 
 	public void changeOutputs(EntityPlayer player, int i, float hitX, float hitY, float hitZ) {
@@ -188,16 +182,22 @@ public class TileEntityFluidChannel extends TileEntity implements IFluidHandler,
 		return new FluidTankInfo[] { new FluidTankInfo(subTanks.get(from)) };
 	}
 
-	public void readCustomNBT(NBTTagCompound tags) {
+	@Override
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
+		this.readSyncableDataFromNBT(compound);
+	}
 
-		NBTTagCompound nbtTank = tags.getCompoundTag("internalTank");
+	public void readSyncableDataFromNBT(NBTTagCompound tags) {
+
+		NBTTagCompound nbtTank = tags.getCompoundTag("InternalTank");
 		if (nbtTank != null)
 			internalTank.readFromNBT(nbtTank);
 
-		for (EnumFacing efSub : subTanks.keySet()) {
-			NBTTagCompound nbtSubTank = tags.getCompoundTag("subTank_" + efSub.name());
+		for (EnumFacing f : subTanks.keySet()) {
+			NBTTagCompound nbtSubTank = tags.getCompoundTag("SubTank_" + f.name());
 			if (nbtSubTank != null)
-				subTanks.get(efSub).readFromNBT(nbtSubTank);
+				subTanks.get(f).readFromNBT(nbtSubTank);
 		}
 
 		int[] validEFs = tags.getIntArray("validOutputs");
@@ -213,17 +213,17 @@ public class TileEntityFluidChannel extends TileEntity implements IFluidHandler,
 	@Override
 	public void writeToNBT(NBTTagCompound tags) {
 		super.writeToNBT(tags);
-		writeCustomNBT(tags);
+		writeSyncableDataToNBT(tags);
 	}
 
-	public void writeCustomNBT(NBTTagCompound tags) {
+	public void writeSyncableDataToNBT(NBTTagCompound tags) {
 		NBTTagCompound nbtTank = new NBTTagCompound();
 		internalTank.writeToNBT(nbtTank);
-		tags.setTag("internalTank", nbtTank);
-		for (EnumFacing efSub : subTanks.keySet()) {
+		tags.setTag("InternalTank", nbtTank);
+		for (EnumFacing f : subTanks.keySet()) {
 			NBTTagCompound nbtSubTank = new NBTTagCompound();
-			subTanks.get(efSub).writeToNBT(nbtSubTank);
-			tags.setTag("subTank_" + efSub.name(), nbtSubTank);
+			subTanks.get(f).writeToNBT(nbtSubTank);
+			tags.setTag("SubTank_" + f.name(), nbtSubTank);
 		}
 
 		int[] validEFs = new int[validOutputs.size()];
@@ -329,11 +329,7 @@ public class TileEntityFluidChannel extends TileEntity implements IFluidHandler,
 
 		// Get Fluid from most recent InputTank
 		FluidTank inputTank = subTanks.get(lastProvider);
-		if (inputTank != null && inputTank.getFluid() != null) // Tank can be
-																// null if input
-																// was received
-																// from top
-		{
+		if (inputTank != null && inputTank.getFluid() != null) {
 
 			FluidStack tempFS = new FluidStack(inputTank.getFluid().getFluid(), Math.min(inputTank.getFluidAmount(), 100));
 			int fit = internalTank.fill(tempFS, false);
