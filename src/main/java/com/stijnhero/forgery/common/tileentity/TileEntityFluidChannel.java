@@ -183,8 +183,9 @@ public class TileEntityFluidChannel extends TileEntity implements IFluidHandler,
 	public FluidTankInfo[] getTankInfo(EnumFacing from) {
 		if (from == null || from == EnumFacing.UP || from == EnumFacing.DOWN)
 			return new FluidTankInfo[] { new FluidTankInfo(internalTank) };
-		else
-			return new FluidTankInfo[] { new FluidTankInfo(subTanks.get(from)) };
+		else if (!subTanks.containsKey(from))
+			return null;
+		return new FluidTankInfo[] { new FluidTankInfo(subTanks.get(from)) };
 	}
 
 	public void readCustomNBT(NBTTagCompound tags) {

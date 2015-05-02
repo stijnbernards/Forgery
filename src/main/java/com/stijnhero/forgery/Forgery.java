@@ -56,8 +56,8 @@ public class Forgery {
 		ForgeryItems.Init();
 		ForgeryItems.RegisterItemsInPre();
 
-		ForgeryFurnaceRecipe.addRecipe(new ForgeryFurnaceRecipe(new ItemStack(ForgeryBlocks.OreCopper), ForgeryFluids.LiquidCopper, 50, 100, 40));
-		ForgeryFurnaceRecipe.addRecipe(new ForgeryFurnaceRecipe(new ItemStack(ForgeryBlocks.OreTin), ForgeryFluids.LiquidTin, 200, 100, 60));
+		ForgeryFurnaceRecipe.addRecipe(new ForgeryFurnaceRecipe(new ItemStack(ForgeryBlocks.OreCopper), ForgeryFluids.LiquidCopper, 50, 100, 40, 100));
+		ForgeryFurnaceRecipe.addRecipe(new ForgeryFurnaceRecipe(new ItemStack(ForgeryBlocks.OreTin), ForgeryFluids.LiquidTin, 200, 100, 60, 200));
 
 		proxy.registerRenderers();
 	}

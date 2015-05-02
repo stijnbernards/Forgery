@@ -3,15 +3,13 @@ package com.stijnhero.forgery;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-import com.stijnhero.forgery.client.renderer.ModelWhetstoneBase;
+import com.stijnhero.forgery.common.block.BlockChimney;
 import com.stijnhero.forgery.common.block.BlockFluidChannel;
 import com.stijnhero.forgery.common.block.BlockForgeryFurnace;
 import com.stijnhero.forgery.common.block.BlockHeater;
@@ -38,6 +36,7 @@ public class ForgeryBlocks {
 	public static Block LiquidCopperBlock;
 	public static Block FluidChannel;
 	public static Block WhetStone;
+	public static Block Chimney;
 	
 	//For testing purposes
 	public static Block FluidChannelTest; 
@@ -60,8 +59,10 @@ public class ForgeryBlocks {
 		BronzeHeaterLit = new BlockHeater(Material.rock, false, BronzeHeater).setHardness(3.0F).setLightLevel(3).setUnlocalizedName("bronzeheaterlit");
 
 		ForgeryFurnace = new BlockForgeryFurnace(Material.rock).setHardness(3.0F).setUnlocalizedName("forgery_furnace");
+		Chimney = new BlockChimney(Material.rock).setHardness(2.0F).setUnlocalizedName("chimney");
+		
 		FluidChannel = new BlockFluidChannel(false).setHardness(3.0F).setUnlocalizedName("fluidchannel");
-
+		
 		FluidChannelTest = new BlockFluidChannel(true).setHardness(3.0F).setUnlocalizedName("fluidchanneltest");
 	}
 	
@@ -76,6 +77,7 @@ public class ForgeryBlocks {
 		GameRegistry.registerBlock(ForgeryBlocks.BronzeHeaterLit, "bronzeheaterlit");
 		GameRegistry.registerBlock(ForgeryBlocks.LiquidCopperBlock, "liquidcopper");
 		GameRegistry.registerBlock(ForgeryBlocks.FluidChannel, "fluidchannel");
+		GameRegistry.registerBlock(ForgeryBlocks.Chimney, "chimney");
 		
 		GameRegistry.registerBlock(ForgeryBlocks.FluidChannelTest, "fluidchanneltest");
 		

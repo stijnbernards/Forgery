@@ -34,10 +34,18 @@ public class BlockFluidChannel extends BlockContainer {
 		ItemStack stack = playerIn.getCurrentEquippedItem();
 		TileEntityFluidChannel tile = (TileEntityFluidChannel) worldIn.getTileEntity(pos);
 
-		if (tile.getTankInfo(EnumFacing.UP)[0].fluid != null) {
-			System.out.println("FLUID: " + tile.getTankInfo(EnumFacing.UP)[0].fluid.getLocalizedName() + ", AMOUNT: " + tile.getTankInfo(EnumFacing.UP)[0].fluid.amount);
+		if (!worldIn.isRemote) {
+			for (EnumFacing f : EnumFacing.values()) {
+				if (tile.getTankInfo(f) != null) {
+					if (tile.getTankInfo(f).length > 0) {
+						if (tile.getTankInfo(f)[0].fluid != null) {
+							System.out.println(f.getName() + " FLUID: " + tile.getTankInfo(f)[0].fluid.getLocalizedName() + ", AMOUNT: " + tile.getTankInfo(f)[0].fluid.amount);
+						}
+					}
+				}
+			}
 		}
-		
+
 		if (stack != null && stack.getItem() == Item.getItemFromBlock(ForgeryBlocks.FluidChannel))
 			return false;
 		else {
@@ -60,10 +68,6 @@ public class BlockFluidChannel extends BlockContainer {
 		this.setBlockBounds(minX, 0.375F, minZ, maxX, 0.625F, maxZ);
 	}
 
-	public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5) {
-		return true;
-	}
-
 	// @Override
 	// public int getRenderType ()
 	// {
@@ -73,5 +77,10 @@ public class BlockFluidChannel extends BlockContainer {
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new TileEntityFluidChannel(test);
+	}
+
+	@Override
+	public boolean isOpaqueCube() {
+		return true;
 	}
 }

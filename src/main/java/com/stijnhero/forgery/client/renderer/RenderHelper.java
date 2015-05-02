@@ -9,8 +9,9 @@ import net.minecraftforge.fluids.Fluid;
 
 public class RenderHelper {
 
-	public static void renderFluid(Fluid fluid, double x, double y, double w, double h){
-		if(fluid == null) return;
+	public static boolean renderFluid(Fluid fluid, double x, double y, double w, double h){
+		if(fluid == null) return false;
+		if(fluid.getStillIcon() == null) return false;
 		
 		TextureAtlasSprite textureAtlasSprite = fluid.getStillIcon();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
@@ -18,10 +19,11 @@ public class RenderHelper {
 		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
 		worldrenderer.startDrawingQuads();
 		
-		worldrenderer.addVertexWithUV(8, y, 0.0, (double) textureAtlasSprite.getMinU(), (double) textureAtlasSprite.getMaxV());
+		worldrenderer.addVertexWithUV(x, y, 0.0, (double) textureAtlasSprite.getMinU(), (double) textureAtlasSprite.getMaxV());
 		worldrenderer.addVertexWithUV(x + w, y, 0.0, (double) textureAtlasSprite.getMaxU(), (double) textureAtlasSprite.getMaxV());
 		worldrenderer.addVertexWithUV(x + w, y - h, 0.0, (double) textureAtlasSprite.getMaxU(), (double) textureAtlasSprite.getMinV());
 		worldrenderer.addVertexWithUV(x, y - h, 0.0, (double) textureAtlasSprite.getMinU(), (double) textureAtlasSprite.getMinV());
 		tessellator.draw();
+		return true;
 	}
 }

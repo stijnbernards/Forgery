@@ -4,12 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
@@ -25,6 +28,8 @@ import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.stijnhero.forgery.ForgeryFluids;
+import com.stijnhero.forgery.common.block.BlockChimney;
 import com.stijnhero.forgery.common.block.BlockForgeryFurnace;
 import com.stijnhero.forgery.common.tileentity.heater.TileEntityHeater;
 import com.stijnhero.forgery.recipes.ForgeryFurnaceRecipe;
@@ -33,6 +38,7 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 
 	public static final int MAX_TANK = 10000;
 	public Map<Fluid, FluidTank> tanks;
+	private FluidTank slag;
 
 	private TileEntityHeater heater = null;
 
@@ -41,10 +47,12 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 	public int temperature = 0;
 	public int[] durations = new int[9];
 	private boolean busy = false;
+	private int chimney_height = 0;
 
 	public TileEntityForgeryFurnace() {
 		this.inventory = new ItemStack[9];
 		this.tanks = new HashMap<Fluid, FluidTank>();
+		this.slag = new FluidTank(1000);
 
 		for (int i = 0; i < 9; i++) {
 			this.durations[i] = 0;
@@ -76,16 +84,15 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 	}
 
 	int ticks = 0;
+	int dticks = 0;
 
 	@Override
 	public void update() {
-		this.chimney();
 		if (ticks == 12) {
 			this.outputFluids();
 			ticks = 0;
 		}
 		ticks++;
-
 		loadHeater(this.worldObj, this.pos);
 
 		if (this.heater != null) {
@@ -110,22 +117,48 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 		}
 	}
 
+	int ch = 0;
+
 	private void handleCrafting() {
 		for (int i = 0; i < this.inventory.length; i++) {
 			if (this.inventory[i] != null && this.inventory[i].stackSize > 0) {
 				ForgeryFurnaceRecipe recipe = ForgeryFurnaceRecipe.getRecipe(this.inventory[i]);
 				if (recipe != null) {
-					if (this.heat >= recipe.heat && this.getCurrentFluid() + recipe.amount <= MAX_TANK) {
+					if (this.heat >= recipe.heat && this.getCurrentFluid() + recipe.amount <= MAX_TANK && this.slag.getFluidAmount() + recipe.slag <= this.slag.getCapacity()) {
 						if (this.durations[i] >= recipe.duration) {
 							this.addFluid(new FluidStack(recipe.fluid, recipe.amount));
 							this.inventory[i].stackSize--;
 							this.durations[i] = 0;
+							this.slag.fill(new FluidStack(ForgeryFluids.Slag, recipe.slag), true);
 							if (this.inventory[i].stackSize <= 0) {
 								this.inventory[i] = null;
 							}
 						} else {
 							this.durations[i]++;
 							this.busy = true;
+							if (ch == 1) {
+								this.chimney();
+								ch = 0;
+							}
+							ch++;
+
+							if (dticks == 16) {
+								dticks = 0;
+								if (chimney_height <= 5) {
+									EntityPlayer player = this.worldObj.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 5);
+									if (player != null) {
+										if (!player.capabilities.isCreativeMode) {
+											if (!player.isPotionActive(Potion.blindness)) {
+												player.addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 2));
+												player.addPotionEffect(new PotionEffect(Potion.weakness.id, 100, 2));
+												player.addPotionEffect(new PotionEffect(Potion.poison.id, 100, 2));
+												player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100, 2));
+											}
+										}
+									}
+								}
+							}
+							dticks++;
 						}
 					}
 					continue;
@@ -236,6 +269,9 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 			tank.fill(fluid, true);
 			this.tanks.put(fluid.getFluid(), tank);
 		}
+
+		NBTTagCompound slagc = compound.getCompoundTag("Slag");
+		this.slag.readFromNBT(slagc);
 	}
 
 	@Override
@@ -260,6 +296,10 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 			taglist.appendTag(nbt);
 		}
 		compound.setTag("Fluids", taglist);
+
+		NBTTagCompound slagc = new NBTTagCompound();
+		slag.writeToNBT(slagc);
+		compound.setTag("Slag", slagc);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -288,6 +328,7 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 			tank.fill(fluid, true);
 			this.tanks.put(fluid.getFluid(), tank);
 		}
+		this.slag.readFromNBT(compound.getCompoundTag("Slag"));
 		super.readSyncableDataFromNBT(compound);
 	}
 
@@ -302,6 +343,9 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 			taglist.appendTag(nbt);
 		}
 		syncData.setTag("Fluids", taglist);
+		NBTTagCompound slagc = new NBTTagCompound();
+		slag.writeToNBT(slagc);
+		syncData.setTag("Slag", slagc);
 		super.writeSyncableDataToNBT(syncData);
 	}
 
@@ -309,58 +353,103 @@ public class TileEntityForgeryFurnace extends TileEntityForgery implements IFlui
 		return this.busy;
 	}
 
+	public FluidTank getSlag() {
+		return this.slag;
+	}
+
 	Random rand = new Random();
+	boolean chimney = false;
+	boolean gap = false;
 
 	private void chimney() {
-		double d0 = (double) pos.getX() + 0.5D;
-		double d1 = (double) pos.getY() + rand.nextDouble() * 6.0D / 16.0D;
-		double d2 = (double) pos.getZ() + 0.5D;
-		double d3 = 0.52D;
-		double d4 = rand.nextDouble() * 0.6D - 0.3D;
+		chimney_height = 0;
+		chimney = false;
+		for (int i = 0; i < 10; i++) {
+			Block block = worldObj.getBlockState(pos.up(i + 1)).getBlock();
+			if (block instanceof BlockChimney) {
+				if (!gap) {
+					chimney = true;
+					gap = true;
+				}
+			} else {
+				gap = true;
+				chimney = false;
+			}
 
-		for(double i = 0; i < 100; i += 0.5){
-			
-			worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 - d3, d1 + i, d2 + d4, 0.0D, 0.0D, 0.0D, new int[0]);
+			if (chimney) {
+				chimney_height++;
+			}
+			if (!chimney) {
+				double n = ((1.0 / 20) * (i + 5));
+				double f = (1.0 - ((1.0 / 20) * (i + 5)));
+
+				for (int j = 0; j < 16; j += 2) {
+					double h = j;
+					if (j > 0) {
+						h = 1.0 / (j - 6);
+					}
+					worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + n, pos.getY() + 1 + i + h + 0.5, pos.getZ() + f - (0.45 - rand.nextDouble() / 2), 0.0D, 0.0D, 0.0D, new int[0]);
+					worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + f - (0.45 - rand.nextDouble() / 2.0), pos.getY() + 1 + i + h + 0.5, pos.getZ() + f, 0.0D, 0.0D, 0.0D, new int[0]);
+					worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + n + (0.45 - rand.nextDouble() / 2), pos.getY() + 1 + i + h + 0.5, pos.getZ() + n, 0.0D, 0.0D, 0.0D, new int[0]);
+					worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + f, pos.getY() + 1 + i + h + 0.5, pos.getZ() + n + (0.45 - rand.nextDouble() / 2), 0.0D, 0.0D, 0.0D, new int[0]);
+				}
+			}
 		}
-		worldObj.spawnParticle(EnumParticleTypes.FLAME, d0 - d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D, new int[0]);
+		gap = false;
 	}
 
 	private void outputFluids() {
 		BlockForgeryFurnace block = (BlockForgeryFurnace) this.worldObj.getBlockState(pos).getBlock();
 		IBlockState state = this.worldObj.getBlockState(pos);
 		EnumFacing enumfacing = (EnumFacing) state.getValue(block.FACING);
-		EnumFacing slug = enumfacing.rotateY();
+
+		// Output slag
+		EnumFacing slagside = enumfacing.rotateY();
+		TileEntity tes = this.worldObj.getTileEntity(this.pos.offset(slagside));
+		if (tes != null && tes instanceof IFluidHandler) {
+			if (tes.getWorld() != null) {
+				IFluidHandler fe = (IFluidHandler) tes;
+				if (slag != null && slag.getFluidAmount() > 0) {
+					this.emptyTank(fe, slagside.getOpposite(), slag.getFluid().copy(), slag, 100);
+				}
+			}
+		}
+
+		// Output fluids
 		EnumFacing fluids = enumfacing.rotateY().rotateY().rotateY();
+		TileEntity te = this.worldObj.getTileEntity(this.pos.offset(fluids));
+		if (te != null && te instanceof IFluidHandler) {
+			if (te.getWorld() != null) {
+				IFluidHandler f = (IFluidHandler) te;
+				for (FluidTank tank : this.tanks.values()) {
+					if (tank != null && tank.getFluidAmount() > 0) {
+						this.emptyTank(f, fluids.getOpposite(), tank.getFluid().copy(), tank, 100);
+					}
+				}
+			}
+		}
+	}
 
-		for (FluidTank tank : this.tanks.values()) {
-			if (tank != null && tank.getFluidAmount() > 0) {
-				FluidStack fluid = tank.getFluid();
-
-				TileEntity te = this.worldObj.getTileEntity(this.pos.offset(fluids));
-				if (te != null && te instanceof IFluidHandler) {
-					if (te.getWorld() == null)
-						return;
-					IFluidHandler f = (IFluidHandler) te;
-					if (f.canFill(fluids.getOpposite(), fluid.getFluid())) {
-						if (f.getTankInfo(fluids.getOpposite())[0].fluid == null) {
-							FluidStack temp = fluid.copy();
-							temp.amount = 100;
-							if (((IFluidHandler) te).fill(fluids.getOpposite(), fluid, true) > 0) {
-								tank.drain(100, true);
-								this.worldObj.markBlockForUpdate(pos);
-								te.markDirty();
-							}
-						} else {
-							if (f.getTankInfo(fluids.getOpposite())[0].fluid.isFluidEqual(fluid)) {
-								FluidStack temp = fluid.copy();
-								temp.amount = 100;
-								if (((IFluidHandler) te).fill(fluids.getOpposite(), fluid, true) > 0) {
-									tank.drain(100, true);
-									this.worldObj.markBlockForUpdate(pos);
-									te.markDirty();
-								}
-							}
-						}
+	private void emptyTank(IFluidHandler target, EnumFacing facing, FluidStack fluid, FluidTank tank, int drain) {
+		if (target.canFill(facing, fluid.getFluid())) {
+			if (target.getTankInfo(facing) == null)
+				return;
+			if (target.getTankInfo(facing).length <= 0)
+				return;
+			if (target.getTankInfo(facing)[0].fluid == null) {
+				fluid.amount = drain;
+				if (target.fill(facing, fluid, true) > 0) {
+					tank.drain(drain, true);
+					this.worldObj.markBlockForUpdate(((TileEntity) target).getPos());
+					this.worldObj.markBlockForUpdate(pos);
+				}
+			} else {
+				if (target.getTankInfo(facing)[0].fluid.isFluidEqual(fluid)) {
+					fluid.amount = drain;
+					if (target.fill(facing, fluid, true) > 0) {
+						tank.drain(drain, true);
+						this.worldObj.markBlockForUpdate(((TileEntity) target).getPos());
+						this.worldObj.markBlockForUpdate(pos);
 					}
 				}
 			}

@@ -40,14 +40,12 @@ public class BlockHeater extends BlockContainer {
 		if (this.dropped == null) {
 			this.dropped = this;
 		}
-		// this.setDefaultState(this.blockState.getBaseState().withProperty(FACING,
-		// EnumFacing.NORTH));
 		if (inventory) {
 			this.setCreativeTab(Forgery.Forgery);
 		}
 	}
-	
-	public BlockHeater(Material materialIn, boolean inventory){
+
+	public BlockHeater(Material materialIn, boolean inventory) {
 		this(materialIn, inventory, null);
 	}
 
