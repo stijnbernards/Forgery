@@ -38,7 +38,7 @@ public class BlockWhetStone extends BlockContainer{
 		
 		TileEntityWhetstone tile = (TileEntityWhetstone) worldIn.getTileEntity(pos);
 		
-		tile.left += 0.1F;
+		tile.left += 1F;
 		
 		System.out.println(tile.left);
 		
